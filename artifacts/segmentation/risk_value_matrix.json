@@ -1,0 +1,77 @@
+{
+  "total_accounts": 856,
+  "total_mrr": 13199262.0,
+  "total_estimated_revenue_at_risk_mrr": 4647816.12944621,
+  "risk_metric_interpretation": "Estimated Revenue at Risk is calculated as MRR * Model Churn Score. Because Phase 6.1 demonstrated negative Brier skill scores for raw model probabilities, this metric serves strictly as an operational prioritization score, NOT an actuarially calibrated financial guarantee or literal probability of monetary loss.",
+  "quadrants": [
+    {
+      "quadrant_name": "Priority 1: High Value - High Risk",
+      "priority_level": 1,
+      "account_count": 164,
+      "account_percentage": 19.158878504672895,
+      "total_mrr": 2659452.0,
+      "estimated_revenue_at_risk_mrr": 1580905.2070237224,
+      "action_recommendation": "Immediate executive outreach, contract renegotiation, and dedicated technical review."
+    },
+    {
+      "quadrant_name": "Priority 2: Mid Value - High Risk",
+      "priority_level": 2,
+      "account_count": 60,
+      "account_percentage": 7.009345794392523,
+      "total_mrr": 368092.0,
+      "estimated_revenue_at_risk_mrr": 221605.15089168318,
+      "action_recommendation": "Proactive customer success contact, satisfaction review, and concession modeling."
+    },
+    {
+      "quadrant_name": "Priority 3: High Value - Moderate Risk",
+      "priority_level": 3,
+      "account_count": 173,
+      "account_percentage": 20.210280373831775,
+      "total_mrr": 3177590.0,
+      "estimated_revenue_at_risk_mrr": 1320750.7161904848,
+      "action_recommendation": "Account health monitoring and executive sponsor check-in."
+    },
+    {
+      "quadrant_name": "Priority 4: Core Value - High Risk",
+      "priority_level": 4,
+      "account_count": 60,
+      "account_percentage": 7.009345794392523,
+      "total_mrr": 112427.0,
+      "estimated_revenue_at_risk_mrr": 67726.39619616205,
+      "action_recommendation": "Automated retention workflows, product education surveys, and self-service re-engagement."
+    },
+    {
+      "quadrant_name": "Priority 5: Standard Monitoring",
+      "priority_level": 5,
+      "account_count": 399,
+      "account_percentage": 46.612149532710276,
+      "total_mrr": 6881701.0,
+      "estimated_revenue_at_risk_mrr": 1456828.6591441575,
+      "action_recommendation": "Ongoing lifecycle engagement, standard health check-ins, and roadmap updates."
+    }
+  ],
+  "value_tiers_breakdown": {
+    "count": {
+      "Core Value": 117,
+      "High Value": 587,
+      "Mid Value": 152
+    },
+    "sum": {
+      "Core Value": 235071.0,
+      "High Value": 12054492.0,
+      "Mid Value": 909699.0
+    }
+  },
+  "risk_tiers_breakdown": {
+    "count": {
+      "High Risk": 284,
+      "Low Risk": 311,
+      "Moderate Risk": 261
+    },
+    "mean": {
+      "High Risk": 0.6013405842032599,
+      "Low Risk": 0.22362375259340314,
+      "Moderate Risk": 0.4194906151941434
+    }
+  }
+}

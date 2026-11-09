@@ -1,0 +1,2 @@
+event_uuid,cust_id,effective_date,churn_classification
+c1,cust_3,2024-06-15,cancellation

@@ -1,0 +1,80 @@
+[
+  {
+    "cluster_id": 0,
+    "cluster_name": "Cluster 0: Standard Established Accounts",
+    "sample_count": 885,
+    "percentage": 43.682132280355376,
+    "key_feature_means": {
+      "sub_current_mrr": 5255.980790960452,
+      "sub_current_arr": 63071.769491525425,
+      "sub_total_active_seats": 78.47118644067797,
+      "sub_tenure_days": 143.03728813559323,
+      "usage_count_30d": 12.32542372881356,
+      "usage_active_days_30d": 1.240677966101695,
+      "usage_duration_secs_30d": 3543.3129943502827,
+      "usage_error_rate_30d": 0.04580915698949987,
+      "tickets_count_90d": 0.06327683615819209,
+      "tickets_avg_satisfaction_90d": -0.8305084745762712,
+      "churn_prior_count": 0.38757062146892657
+    },
+    "dominant_categories": {
+      "account_industry": "FinTech",
+      "account_country": "US",
+      "account_referral_source": "ads",
+      "sub_billing_frequency": "mixed"
+    },
+    "empirical_summary": "Cluster 0 (N=885, 43.7%): Avg MRR=$5,255.98, Avg Seats=78.5, Avg 30d Usage=12.3 events (1.2 active days), Commercial Tenure=143.0 days, Avg 90d Tickets=0.1."
+  },
+  {
+    "cluster_id": 1,
+    "cluster_name": "Cluster 1: High-Value Enterprise Accounts",
+    "sample_count": 601,
+    "percentage": 29.66436327739388,
+    "key_feature_means": {
+      "sub_current_mrr": 9622.046589018302,
+      "sub_current_arr": 115464.55906821963,
+      "sub_total_active_seats": 125.28951747088186,
+      "sub_tenure_days": 164.23128119800333,
+      "usage_count_30d": 39.31281198003328,
+      "usage_active_days_30d": 3.6672212978369383,
+      "usage_duration_secs_30d": 12180.953410981698,
+      "usage_error_rate_30d": 0.062378984666849845,
+      "tickets_count_90d": 0.2995008319467554,
+      "tickets_avg_satisfaction_90d": -0.2096505823627288,
+      "churn_prior_count": 0.33277870216306155
+    },
+    "dominant_categories": {
+      "account_industry": "DevTools",
+      "account_country": "US",
+      "account_referral_source": "event",
+      "sub_billing_frequency": "mixed"
+    },
+    "empirical_summary": "Cluster 1 (N=601, 29.7%): Avg MRR=$9,622.05, Avg Seats=125.3, Avg 30d Usage=39.3 events (3.7 active days), Commercial Tenure=164.2 days, Avg 90d Tickets=0.3."
+  },
+  {
+    "cluster_id": 2,
+    "cluster_name": "Cluster 2: Standard Established Accounts",
+    "sample_count": 540,
+    "percentage": 26.653504442250743,
+    "key_feature_means": {
+      "sub_current_mrr": 5974.990740740741,
+      "sub_current_arr": 71699.88888888889,
+      "sub_total_active_seats": 90.14259259259259,
+      "sub_tenure_days": 132.38333333333333,
+      "usage_count_30d": 15.753703703703703,
+      "usage_active_days_30d": 1.5888888888888888,
+      "usage_duration_secs_30d": 4743.168518518519,
+      "usage_error_rate_30d": 0.05029715683583475,
+      "tickets_count_90d": 1.3314814814814815,
+      "tickets_avg_satisfaction_90d": 2.265432098765432,
+      "churn_prior_count": 0.3648148148148148
+    },
+    "dominant_categories": {
+      "account_industry": "FinTech",
+      "account_country": "US",
+      "account_referral_source": "other",
+      "sub_billing_frequency": "mixed"
+    },
+    "empirical_summary": "Cluster 2 (N=540, 26.7%): Avg MRR=$5,974.99, Avg Seats=90.1, Avg 30d Usage=15.8 events (1.6 active days), Commercial Tenure=132.4 days, Avg 90d Tickets=1.3."
+  }
+]

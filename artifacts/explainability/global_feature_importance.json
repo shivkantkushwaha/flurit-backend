@@ -1,0 +1,362 @@
+[
+  {
+    "feature_name": "sub_active_count",
+    "rank": 1,
+    "mean_abs_attribution": 0.6776748922372385,
+    "mean_directional_attribution": 0.6230317795311263,
+    "feature_group": "subscription",
+    "feature_description": "Count of subscriptions actively un-terminated at snapshot date."
+  },
+  {
+    "feature_name": "sub_total_active_seats",
+    "rank": 2,
+    "mean_abs_attribution": 0.5166277564830646,
+    "mean_directional_attribution": -0.4526709614444759,
+    "feature_group": "subscription",
+    "feature_description": "Total licensed seats across active subscriptions."
+  },
+  {
+    "feature_name": "usage_count_30d",
+    "rank": 3,
+    "mean_abs_attribution": 0.40264039565131365,
+    "mean_directional_attribution": 0.018995093426819407,
+    "feature_group": "usage",
+    "feature_description": "Total product action count in the past 30 days (T_obs - 30d, T_obs]."
+  },
+  {
+    "feature_name": "usage_active_days_90d",
+    "rank": 4,
+    "mean_abs_attribution": 0.3319706478708577,
+    "mean_directional_attribution": -0.0033126809412541767,
+    "feature_group": "usage",
+    "feature_description": "Number of distinct calendar days with feature activity in past 90 days (0-90)."
+  },
+  {
+    "feature_name": "sub_tenure_days",
+    "rank": 5,
+    "mean_abs_attribution": 0.28744302158692825,
+    "mean_directional_attribution": -0.21417223542174177,
+    "feature_group": "subscription",
+    "feature_description": "Days from customer's earliest subscription start date to snapshot date."
+  },
+  {
+    "feature_name": "usage_distinct_features_30d",
+    "rank": 6,
+    "mean_abs_attribution": 0.28091444872178367,
+    "mean_directional_attribution": -0.012801675621117803,
+    "feature_group": "usage",
+    "feature_description": "Count of distinct feature modules utilized in past 30 days."
+  },
+  {
+    "feature_name": "usage_count_90d",
+    "rank": 7,
+    "mean_abs_attribution": 0.25555310996486075,
+    "mean_directional_attribution": 0.002755520987036124,
+    "feature_group": "usage",
+    "feature_description": "Total product action count in the past 90 days (T_obs - 90d, T_obs]."
+  },
+  {
+    "feature_name": "account_industry",
+    "rank": 8,
+    "mean_abs_attribution": 0.21780983153014247,
+    "mean_directional_attribution": 0.020898677660991512,
+    "feature_group": "account",
+    "feature_description": "Account industry domain (e.g. DevTools, FinTech, Healthcare)."
+  },
+  {
+    "feature_name": "usage_count_60d",
+    "rank": 9,
+    "mean_abs_attribution": 0.2175521073327595,
+    "mean_directional_attribution": 0.0006088514181658141,
+    "feature_group": "usage",
+    "feature_description": "Total product action count in the past 60 days (T_obs - 60d, T_obs]."
+  },
+  {
+    "feature_name": "churn_prior_count",
+    "rank": 10,
+    "mean_abs_attribution": 0.21677287078848578,
+    "mean_directional_attribution": -0.13993695448463128,
+    "feature_group": "churn_history",
+    "feature_description": "Count of historical churn events logged on or before snapshot date."
+  },
+  {
+    "feature_name": "account_age_days",
+    "rank": 11,
+    "mean_abs_attribution": 0.20767677126811435,
+    "mean_directional_attribution": -0.135551560699297,
+    "feature_group": "account",
+    "feature_description": "Days between account creation (signup_date) and snapshot date."
+  },
+  {
+    "feature_name": "account_initial_seats",
+    "rank": 12,
+    "mean_abs_attribution": 0.19233376320049037,
+    "mean_directional_attribution": 0.019864135448840255,
+    "feature_group": "account",
+    "feature_description": "Licensed seat count declared at account creation."
+  },
+  {
+    "feature_name": "churn_has_prior",
+    "rank": 13,
+    "mean_abs_attribution": 0.16436188403369612,
+    "mean_directional_attribution": 0.08981867007592521,
+    "feature_group": "churn_history",
+    "feature_description": "Binary indicator (1/0) if customer experienced at least one prior churn event."
+  },
+  {
+    "feature_name": "account_country",
+    "rank": 14,
+    "mean_abs_attribution": 0.16142085306436782,
+    "mean_directional_attribution": -0.0034807270343456724,
+    "feature_group": "account",
+    "feature_description": "Account headquarters country code."
+  },
+  {
+    "feature_name": "tickets_urgent_count_90d",
+    "rank": 15,
+    "mean_abs_attribution": 0.15793566314977506,
+    "mean_directional_attribution": -0.005788358841700185,
+    "feature_group": "support",
+    "feature_description": "Count of tickets with priority='urgent' submitted in past 90 days."
+  },
+  {
+    "feature_name": "churn_prior_refund_total",
+    "rank": 16,
+    "mean_abs_attribution": 0.15564844846347622,
+    "mean_directional_attribution": -0.09718785492008918,
+    "feature_group": "churn_history",
+    "feature_description": "Cumulative refund dollars granted during historical churn events on or before snapshot."
+  },
+  {
+    "feature_name": "churn_days_since_last",
+    "rank": 17,
+    "mean_abs_attribution": 0.1536486206007206,
+    "mean_directional_attribution": 0.09204164833801882,
+    "feature_group": "churn_history",
+    "feature_description": "Days from most recent historical churn event (<= T_obs) to snapshot date."
+  },
+  {
+    "feature_name": "usage_trend_pct_30d",
+    "rank": 18,
+    "mean_abs_attribution": 0.1524795079758097,
+    "mean_directional_attribution": -0.010493317017954041,
+    "feature_group": "usage",
+    "feature_description": "Relative velocity change: (usage_30d - usage_prev_30d) / max(usage_prev_30d, 1.0)."
+  },
+  {
+    "feature_name": "tickets_high_or_urgent_count_90d",
+    "rank": 19,
+    "mean_abs_attribution": 0.15077494611119083,
+    "mean_directional_attribution": -0.0012852213518463622,
+    "feature_group": "support",
+    "feature_description": "Count of tickets with priority in ('high', 'urgent') submitted in past 90 days."
+  },
+  {
+    "feature_name": "account_referral_source",
+    "rank": 20,
+    "mean_abs_attribution": 0.14913119530596577,
+    "mean_directional_attribution": 0.010651396965108485,
+    "feature_group": "account",
+    "feature_description": "Customer acquisition channel (e.g. organic, partner, paid_ad)."
+  },
+  {
+    "feature_name": "tickets_has_unrated_90d",
+    "rank": 21,
+    "mean_abs_attribution": 0.12307187578349969,
+    "mean_directional_attribution": 0.0005932765741823342,
+    "feature_group": "support",
+    "feature_description": "Binary indicator (1/0) if customer had tickets in past 90 days where satisfaction was unrated."
+  },
+  {
+    "feature_name": "sub_billing_frequency",
+    "rank": 22,
+    "mean_abs_attribution": 0.10470669832928148,
+    "mean_directional_attribution": -0.07851844918850377,
+    "feature_group": "subscription",
+    "feature_description": "Primary billing interval of active subscriptions ('monthly', 'annual', 'mixed', 'none')."
+  },
+  {
+    "feature_name": "tickets_avg_satisfaction_90d",
+    "rank": 23,
+    "mean_abs_attribution": 0.0957766706394967,
+    "mean_directional_attribution": -0.01132019839843704,
+    "feature_group": "support",
+    "feature_description": "Mean satisfaction score for rated tickets in past 90 days (1.0 to 5.0)."
+  },
+  {
+    "feature_name": "sub_current_arr",
+    "rank": 24,
+    "mean_abs_attribution": 0.09151897986616016,
+    "mean_directional_attribution": -0.07704063132862389,
+    "feature_group": "subscription",
+    "feature_description": "Total Annual Recurring Revenue across active subscriptions."
+  },
+  {
+    "feature_name": "sub_current_mrr",
+    "rank": 25,
+    "mean_abs_attribution": 0.09151897986615805,
+    "mean_directional_attribution": -0.07704063132862213,
+    "feature_group": "subscription",
+    "feature_description": "Total Monthly Recurring Revenue across active subscriptions."
+  },
+  {
+    "feature_name": "tickets_avg_first_response_minutes_90d",
+    "rank": 26,
+    "mean_abs_attribution": 0.08349370836590471,
+    "mean_directional_attribution": 0.0011297167097703382,
+    "feature_group": "support",
+    "feature_description": "Mean first response time in minutes for tickets submitted in past 90 days."
+  },
+  {
+    "feature_name": "usage_duration_secs_30d",
+    "rank": 27,
+    "mean_abs_attribution": 0.08252833352613144,
+    "mean_directional_attribution": 0.0015057053427387783,
+    "feature_group": "usage",
+    "feature_description": "Total active product engagement duration in seconds over past 30 days."
+  },
+  {
+    "feature_name": "usage_duration_secs_90d",
+    "rank": 28,
+    "mean_abs_attribution": 0.07932978484464827,
+    "mean_directional_attribution": 0.0023236126984353712,
+    "feature_group": "usage",
+    "feature_description": "Total active product engagement duration in seconds over past 90 days."
+  },
+  {
+    "feature_name": "sub_historical_upgrade_count",
+    "rank": 29,
+    "mean_abs_attribution": 0.06993972980791659,
+    "mean_directional_attribution": 0.03606678748990212,
+    "feature_group": "subscription",
+    "feature_description": "Historical count of subscriptions started on or before snapshot with upgrade_flag=True."
+  },
+  {
+    "feature_name": "tickets_count_lifetime",
+    "rank": 30,
+    "mean_abs_attribution": 0.06451721358105017,
+    "mean_directional_attribution": 0.05529917912396058,
+    "feature_group": "support",
+    "feature_description": "Total lifetime support tickets submitted on or before snapshot date."
+  },
+  {
+    "feature_name": "usage_error_count_30d",
+    "rank": 31,
+    "mean_abs_attribution": 0.05285839166802755,
+    "mean_directional_attribution": -0.0007671595314260434,
+    "feature_group": "usage",
+    "feature_description": "Total feature execution error count in past 30 days."
+  },
+  {
+    "feature_name": "usage_days_since_last",
+    "rank": 32,
+    "mean_abs_attribution": 0.03729623522933512,
+    "mean_directional_attribution": -0.0006734432511262357,
+    "feature_group": "usage",
+    "feature_description": "Days since latest historical feature usage date on or before snapshot."
+  },
+  {
+    "feature_name": "usage_beta_feature_count_30d",
+    "rank": 33,
+    "mean_abs_attribution": 0.03278189322464648,
+    "mean_directional_attribution": 0.001201242937530346,
+    "feature_group": "usage",
+    "feature_description": "Total actions on beta features (is_beta_feature=True) in past 30 days."
+  },
+  {
+    "feature_name": "sub_has_active_trial",
+    "rank": 34,
+    "mean_abs_attribution": 0.028011976442845303,
+    "mean_directional_attribution": -0.012553893425322031,
+    "feature_group": "subscription",
+    "feature_description": "Binary indicator if at least one active subscription is in trial mode."
+  },
+  {
+    "feature_name": "tickets_count_30d",
+    "rank": 35,
+    "mean_abs_attribution": 0.019780009383437654,
+    "mean_directional_attribution": 0.0019323573120373272,
+    "feature_group": "support",
+    "feature_description": "Support tickets submitted in the past 30 days (T_obs - 30d, T_obs]."
+  },
+  {
+    "feature_name": "sub_has_auto_renew",
+    "rank": 36,
+    "mean_abs_attribution": 0.0180526974374548,
+    "mean_directional_attribution": 0.016525216463372294,
+    "feature_group": "subscription",
+    "feature_description": "Binary indicator if at least one active subscription has auto-renew enabled."
+  },
+  {
+    "feature_name": "tickets_count_90d",
+    "rank": 37,
+    "mean_abs_attribution": 0.015450650463571466,
+    "mean_directional_attribution": -0.0006728618670016467,
+    "feature_group": "support",
+    "feature_description": "Support tickets submitted in the past 90 days (T_obs - 90d, T_obs]."
+  },
+  {
+    "feature_name": "account_is_trial",
+    "rank": 38,
+    "mean_abs_attribution": 0.014705520695978996,
+    "mean_directional_attribution": -0.0005287480418356719,
+    "feature_group": "account",
+    "feature_description": "Binary indicator (1/0) whether account was initialized on trial."
+  },
+  {
+    "feature_name": "tickets_escalated_count_90d",
+    "rank": 39,
+    "mean_abs_attribution": 0.007268750751432059,
+    "mean_directional_attribution": 0.0012643026028324534,
+    "feature_group": "support",
+    "feature_description": "Count of tickets with escalation_flag=True submitted in past 90 days."
+  },
+  {
+    "feature_name": "sub_historical_downgrade_count",
+    "rank": 40,
+    "mean_abs_attribution": 0.007085072580221758,
+    "mean_directional_attribution": 0.0030353369500827256,
+    "feature_group": "subscription",
+    "feature_description": "Historical count of subscriptions started on or before snapshot with downgrade_flag=True."
+  },
+  {
+    "feature_name": "usage_error_rate_30d",
+    "rank": 41,
+    "mean_abs_attribution": 0.006592092732803342,
+    "mean_directional_attribution": 0.0007222812288986501,
+    "feature_group": "usage",
+    "feature_description": "Ratio of feature errors to total usage actions in past 30 days."
+  },
+  {
+    "feature_name": "usage_active_days_30d",
+    "rank": 42,
+    "mean_abs_attribution": 0.0011207235575667618,
+    "mean_directional_attribution": -5.0117697353364176e-05,
+    "feature_group": "usage",
+    "feature_description": "Number of distinct calendar days with feature activity in past 30 days (0-30)."
+  },
+  {
+    "feature_name": "tickets_has_unresolved",
+    "rank": 43,
+    "mean_abs_attribution": 0.0006159021980489619,
+    "mean_directional_attribution": 0.00011110964098288742,
+    "feature_group": "support",
+    "feature_description": "Binary indicator (1/0) whether account has at least one currently unresolved ticket at snapshot."
+  },
+  {
+    "feature_name": "tickets_unresolved_count",
+    "rank": 44,
+    "mean_abs_attribution": 0.0006159021980489619,
+    "mean_directional_attribution": 0.00011110964098288742,
+    "feature_group": "support",
+    "feature_description": "Tickets submitted on or before snapshot that remain open/unresolved (closed_at is null or > T_obs)."
+  },
+  {
+    "feature_name": "usage_has_history",
+    "rank": 45,
+    "mean_abs_attribution": 0.0,
+    "mean_directional_attribution": 0.0,
+    "feature_group": "usage",
+    "feature_description": "Binary indicator (1/0) whether customer has any recorded usage history on or before snapshot."
+  }
+]

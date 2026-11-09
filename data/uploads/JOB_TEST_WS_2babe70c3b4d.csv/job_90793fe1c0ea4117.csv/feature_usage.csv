@@ -1,0 +1,6 @@
+event_id,sub_key,cust_id,timestamp,feature,duration,is_err,beta_flag
+u1,sub_1,cust_1,2024-02-15 10:00:00,dashboard,120.0,0,0
+u2,sub_1,cust_1,2024-03-10 14:30:00,reports,350.0,0,1
+u3,sub_2,cust_2,2024-02-01 09:15:00,export,45.0,1,0
+u4,sub_3,cust_3,2024-02-20 16:45:00,api_call,15.0,0,0
+u5,sub_4,cust_4,2024-03-01 11:20:00,dashboard,200.0,0,0

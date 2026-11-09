@@ -1,0 +1,794 @@
+[
+  {
+    "account_id": "A-00cac8",
+    "snapshot_date": "2024-10-01",
+    "model_score": 0.5628468699546043,
+    "decision_threshold": 0.5,
+    "predicted_risk_label": 1,
+    "base_value_log_odds": -0.12072901286586724,
+    "predicted_log_odds": 0.2527240560015841,
+    "top_risk_increasing_factors": [
+      {
+        "feature_name": "sub_active_count",
+        "feature_value": 7,
+        "attribution": 0.6192497032497294,
+        "direction": "increases_risk",
+        "feature_description": "Count of subscriptions actively un-terminated at snapshot date."
+      },
+      {
+        "feature_name": "usage_distinct_features_30d",
+        "feature_value": 1,
+        "attribution": 0.243715983393858,
+        "direction": "increases_risk",
+        "feature_description": "Count of distinct feature modules utilized in past 30 days."
+      },
+      {
+        "feature_name": "account_country",
+        "feature_value": "AU",
+        "attribution": 0.2393281230322479,
+        "direction": "increases_risk",
+        "feature_description": "Account headquarters country code."
+      },
+      {
+        "feature_name": "usage_count_90d",
+        "feature_value": 41,
+        "attribution": 0.215733682023403,
+        "direction": "increases_risk",
+        "feature_description": "Total product action count in the past 90 days (T_obs - 90d, T_obs]."
+      },
+      {
+        "feature_name": "account_referral_source",
+        "feature_value": "organic",
+        "attribution": 0.20707580987382343,
+        "direction": "increases_risk",
+        "feature_description": "Customer acquisition channel (e.g. organic, partner, paid_ad)."
+      }
+    ],
+    "top_risk_decreasing_factors": [
+      {
+        "feature_name": "sub_tenure_days",
+        "feature_value": 381,
+        "attribution": -0.3918554492370788,
+        "direction": "decreases_risk",
+        "feature_description": "Days from customer's earliest subscription start date to snapshot date."
+      },
+      {
+        "feature_name": "usage_active_days_90d",
+        "feature_value": 4,
+        "attribution": -0.2826168088772334,
+        "direction": "decreases_risk",
+        "feature_description": "Number of distinct calendar days with feature activity in past 90 days (0-90)."
+      },
+      {
+        "feature_name": "account_age_days",
+        "feature_value": 382,
+        "attribution": -0.21466669338326258,
+        "direction": "decreases_risk",
+        "feature_description": "Days between account creation (signup_date) and snapshot date."
+      },
+      {
+        "feature_name": "usage_count_30d",
+        "feature_value": 14,
+        "attribution": -0.21323594309773855,
+        "direction": "decreases_risk",
+        "feature_description": "Total product action count in the past 30 days (T_obs - 30d, T_obs]."
+      },
+      {
+        "feature_name": "account_initial_seats",
+        "feature_value": 8,
+        "attribution": -0.14587185374577735,
+        "direction": "decreases_risk",
+        "feature_description": "Licensed seat count declared at account creation."
+      }
+    ],
+    "feature_attributions": {
+      "account_age_days": -0.21466669338326258,
+      "account_industry": 0.08953159568502787,
+      "account_country": 0.2393281230322479,
+      "account_referral_source": 0.20707580987382343,
+      "account_initial_seats": -0.14587185374577735,
+      "account_is_trial": 0.035277085441705845,
+      "sub_active_count": 0.6192497032497294,
+      "sub_current_mrr": -0.021905905475472782,
+      "sub_current_arr": -0.021905905475473286,
+      "sub_total_active_seats": -0.014484374041375273,
+      "sub_tenure_days": -0.3918554492370788,
+      "sub_billing_frequency": -0.09977145437355091,
+      "sub_has_auto_renew": 0.017329446310953317,
+      "sub_has_active_trial": -0.03024772178323252,
+      "sub_historical_upgrade_count": -0.03579659089409801,
+      "sub_historical_downgrade_count": -0.0028001403064612245,
+      "usage_count_30d": -0.21323594309773855,
+      "usage_count_60d": 0.17758968325037242,
+      "usage_count_90d": 0.215733682023403,
+      "usage_duration_secs_30d": 0.018855482391838402,
+      "usage_duration_secs_90d": -0.01243449332985947,
+      "usage_error_count_30d": -0.04678251027023546,
+      "usage_error_rate_30d": 0.006171391144167738,
+      "usage_active_days_30d": 0.0009745188434192598,
+      "usage_active_days_90d": -0.2826168088772334,
+      "usage_distinct_features_30d": 0.243715983393858,
+      "usage_beta_feature_count_30d": -0.01964610221349688,
+      "usage_days_since_last": -0.029437632654774205,
+      "usage_has_history": 0.0,
+      "usage_trend_pct_30d": 0.05693779812598734,
+      "tickets_count_30d": -0.01075886631909776,
+      "tickets_count_90d": 0.012624537962738382,
+      "tickets_count_lifetime": 0.0004293134167431704,
+      "tickets_unresolved_count": 0.00036564167697488695,
+      "tickets_has_unresolved": 0.00036564167697488695,
+      "tickets_urgent_count_90d": 0.08534606322917004,
+      "tickets_high_or_urgent_count_90d": -0.09584941336403485,
+      "tickets_escalated_count_90d": -0.0030925436914568303,
+      "tickets_avg_satisfaction_90d": 0.05820832547370949,
+      "tickets_has_unrated_90d": 0.07528973713952727,
+      "tickets_avg_first_response_minutes_90d": -0.06597814143684395,
+      "churn_prior_count": 0.09672285934720376,
+      "churn_has_prior": -0.0938367516880155,
+      "churn_days_since_last": -0.06632182126383986,
+      "churn_prior_refund_total": 0.03562776310028512
+    },
+    "plain_language_summary": "Estimated model churn score is 0.56. Main factors associated with higher score: sub active count (7), usage distinct features 30d (1), account country (AU). Mitigating factors associated with lower score: sub tenure days (381), usage active days 90d (4).",
+    "association_disclaimer": "Statistical Association Note: Feature attributions reflect correlational relationships learned by the Logistic Regression model from historical observations. They quantify how much each feature shifts the predicted log-odds relative to the background baseline, and do NOT imply a direct causal relationship or guaranteed real-world outcome."
+  },
+  {
+    "account_id": "A-016043",
+    "snapshot_date": "2024-10-01",
+    "model_score": 0.5065334425220719,
+    "decision_threshold": 0.5,
+    "predicted_risk_label": 1,
+    "base_value_log_odds": -0.12072901286586724,
+    "predicted_log_odds": 0.02613525763100838,
+    "top_risk_increasing_factors": [
+      {
+        "feature_name": "account_industry",
+        "feature_value": "EdTech",
+        "attribution": 0.24119928629237966,
+        "direction": "increases_risk",
+        "feature_description": "Account industry domain (e.g. DevTools, FinTech, Healthcare)."
+      },
+      {
+        "feature_name": "usage_count_60d",
+        "feature_value": 22,
+        "attribution": 0.22025248022259683,
+        "direction": "increases_risk",
+        "feature_description": "Total product action count in the past 60 days (T_obs - 60d, T_obs]."
+      },
+      {
+        "feature_name": "churn_has_prior",
+        "feature_value": 1,
+        "attribution": 0.2108319324785223,
+        "direction": "increases_risk",
+        "feature_description": "Binary indicator (1/0) if customer experienced at least one prior churn event."
+      },
+      {
+        "feature_name": "account_referral_source",
+        "feature_value": "organic",
+        "attribution": 0.20707580987382343,
+        "direction": "increases_risk",
+        "feature_description": "Customer acquisition channel (e.g. organic, partner, paid_ad)."
+      },
+      {
+        "feature_name": "account_country",
+        "feature_value": "CA",
+        "attribution": 0.20470661276912194,
+        "direction": "increases_risk",
+        "feature_description": "Account headquarters country code."
+      }
+    ],
+    "top_risk_decreasing_factors": [
+      {
+        "feature_name": "churn_prior_refund_total",
+        "feature_value": 84.75,
+        "attribution": -0.8635142543712863,
+        "direction": "decreases_risk",
+        "feature_description": "Cumulative refund dollars granted during historical churn events on or before snapshot."
+      },
+      {
+        "feature_name": "usage_trend_pct_30d",
+        "feature_value": 5.0,
+        "attribution": -0.4321742676137307,
+        "direction": "decreases_risk",
+        "feature_description": "Relative velocity change: (usage_30d - usage_prev_30d) / max(usage_prev_30d, 1.0)."
+      },
+      {
+        "feature_name": "account_initial_seats",
+        "feature_value": 4,
+        "attribution": -0.20042150548108167,
+        "direction": "decreases_risk",
+        "feature_description": "Licensed seat count declared at account creation."
+      },
+      {
+        "feature_name": "churn_prior_count",
+        "feature_value": 1,
+        "attribution": -0.16808864475743923,
+        "direction": "decreases_risk",
+        "feature_description": "Count of historical churn events logged on or before snapshot date."
+      },
+      {
+        "feature_name": "usage_active_days_90d",
+        "feature_value": 5,
+        "attribution": -0.15275025074947773,
+        "direction": "decreases_risk",
+        "feature_description": "Number of distinct calendar days with feature activity in past 90 days (0-90)."
+      }
+    ],
+    "feature_attributions": {
+      "account_age_days": 0.14889553223732238,
+      "account_industry": 0.24119928629237966,
+      "account_country": 0.20470661276912194,
+      "account_referral_source": 0.20707580987382343,
+      "account_initial_seats": -0.20042150548108167,
+      "account_is_trial": 0.035277085441705845,
+      "sub_active_count": 0.10807223532200115,
+      "sub_current_mrr": 0.021325014018718023,
+      "sub_current_arr": 0.021325014018718527,
+      "sub_total_active_seats": 0.18249177010289336,
+      "sub_tenure_days": 0.14450869682364012,
+      "sub_billing_frequency": -0.09977145437355091,
+      "sub_has_auto_renew": 0.017329446310953317,
+      "sub_has_active_trial": -0.03024772178323252,
+      "sub_historical_upgrade_count": 0.0482403652489403,
+      "sub_historical_downgrade_count": -0.0028001403064612245,
+      "usage_count_30d": 0.0222272103106377,
+      "usage_count_60d": 0.22025248022259683,
+      "usage_count_90d": 0.1311964182476201,
+      "usage_duration_secs_30d": -0.07721214064786644,
+      "usage_duration_secs_90d": 0.11990132639099581,
+      "usage_error_count_30d": -0.04678251027023546,
+      "usage_error_rate_30d": 0.006171391144167738,
+      "usage_active_days_30d": 4.931960407182748e-05,
+      "usage_active_days_90d": -0.15275025074947773,
+      "usage_distinct_features_30d": 0.016172857884200687,
+      "usage_beta_feature_count_30d": -0.01964610221349688,
+      "usage_days_since_last": 0.04576745631750025,
+      "usage_has_history": 0.0,
+      "usage_trend_pct_30d": -0.4321742676137307,
+      "tickets_count_30d": -0.01075886631909776,
+      "tickets_count_90d": 0.012624537962738382,
+      "tickets_count_lifetime": 0.0004293134167431704,
+      "tickets_unresolved_count": 0.00036564167697488695,
+      "tickets_has_unresolved": 0.00036564167697488695,
+      "tickets_urgent_count_90d": 0.08534606322917004,
+      "tickets_high_or_urgent_count_90d": -0.09584941336403485,
+      "tickets_escalated_count_90d": -0.0030925436914568303,
+      "tickets_avg_satisfaction_90d": 0.05820832547370949,
+      "tickets_has_unrated_90d": 0.07528973713952727,
+      "tickets_avg_first_response_minutes_90d": -0.06597814143684395,
+      "churn_prior_count": -0.16808864475743923,
+      "churn_has_prior": 0.2108319324785223,
+      "churn_days_since_last": 0.0303057062397989,
+      "churn_prior_refund_total": -0.8635142543712863
+    },
+    "plain_language_summary": "Estimated model churn score is 0.51. Main factors associated with higher score: account industry (EdTech), usage count 60d (22), churn has prior (1). Mitigating factors associated with lower score: churn prior refund total (84.75), usage trend pct 30d (5.0).",
+    "association_disclaimer": "Statistical Association Note: Feature attributions reflect correlational relationships learned by the Logistic Regression model from historical observations. They quantify how much each feature shifts the predicted log-odds relative to the background baseline, and do NOT imply a direct causal relationship or guaranteed real-world outcome."
+  },
+  {
+    "account_id": "A-00bed1",
+    "snapshot_date": "2024-10-01",
+    "model_score": 0.49820761788137874,
+    "decision_threshold": 0.5,
+    "predicted_risk_label": 0,
+    "base_value_log_odds": -0.12072901286586724,
+    "predicted_log_odds": -0.007169559185479568,
+    "top_risk_increasing_factors": [
+      {
+        "feature_name": "sub_active_count",
+        "feature_value": 10,
+        "attribution": 1.1304271711774576,
+        "direction": "increases_risk",
+        "feature_description": "Count of subscriptions actively un-terminated at snapshot date."
+      },
+      {
+        "feature_name": "churn_days_since_last",
+        "feature_value": 272.0,
+        "attribution": 0.4409726981302637,
+        "direction": "increases_risk",
+        "feature_description": "Days from most recent historical churn event (<= T_obs) to snapshot date."
+      },
+      {
+        "feature_name": "usage_active_days_90d",
+        "feature_value": 9,
+        "attribution": 0.3667159817615451,
+        "direction": "increases_risk",
+        "feature_description": "Number of distinct calendar days with feature activity in past 90 days (0-90)."
+      },
+      {
+        "feature_name": "usage_count_30d",
+        "feature_value": 33,
+        "attribution": 0.34598904624715504,
+        "direction": "increases_risk",
+        "feature_description": "Total product action count in the past 30 days (T_obs - 30d, T_obs]."
+      },
+      {
+        "feature_name": "account_industry",
+        "feature_value": "Cybersecurity",
+        "attribution": 0.31292729848664663,
+        "direction": "increases_risk",
+        "feature_description": "Account industry domain (e.g. DevTools, FinTech, Healthcare)."
+      }
+    ],
+    "top_risk_decreasing_factors": [
+      {
+        "feature_name": "sub_total_active_seats",
+        "feature_value": 342,
+        "attribution": -1.0116761037717352,
+        "direction": "decreases_risk",
+        "feature_description": "Total licensed seats across active subscriptions."
+      },
+      {
+        "feature_name": "usage_count_90d",
+        "feature_value": 100,
+        "attribution": -0.3384550471733961,
+        "direction": "decreases_risk",
+        "feature_description": "Total product action count in the past 90 days (T_obs - 90d, T_obs]."
+      },
+      {
+        "feature_name": "sub_tenure_days",
+        "feature_value": 320,
+        "attribution": -0.28992955232211354,
+        "direction": "decreases_risk",
+        "feature_description": "Days from customer's earliest subscription start date to snapshot date."
+      },
+      {
+        "feature_name": "sub_current_arr",
+        "feature_value": 402072.0,
+        "attribution": -0.23762544132079763,
+        "direction": "decreases_risk",
+        "feature_description": "Total Annual Recurring Revenue across active subscriptions."
+      },
+      {
+        "feature_name": "sub_current_mrr",
+        "feature_value": 33506.0,
+        "attribution": -0.23762544132079214,
+        "direction": "decreases_risk",
+        "feature_description": "Total Monthly Recurring Revenue across active subscriptions."
+      }
+    ],
+    "feature_attributions": {
+      "account_age_days": -0.1464987760794029,
+      "account_industry": 0.31292729848664663,
+      "account_country": -0.0919574685680395,
+      "account_referral_source": 0.008625099996317852,
+      "account_initial_seats": 0.12687640493074415,
+      "account_is_trial": 0.035277085441705845,
+      "sub_active_count": 1.1304271711774576,
+      "sub_current_mrr": -0.23762544132079214,
+      "sub_current_arr": -0.23762544132079763,
+      "sub_total_active_seats": -1.0116761037717352,
+      "sub_tenure_days": -0.28992955232211354,
+      "sub_billing_frequency": -0.09977145437355091,
+      "sub_has_auto_renew": 0.017329446310953317,
+      "sub_has_active_trial": -0.03024772178323252,
+      "sub_historical_upgrade_count": 0.21631427753501695,
+      "sub_historical_downgrade_count": -0.0028001403064612245,
+      "usage_count_30d": 0.34598904624715504,
+      "usage_count_60d": -0.0997184970690862,
+      "usage_count_90d": -0.3384550471733961,
+      "usage_duration_secs_30d": 0.015739277345061028,
+      "usage_duration_secs_90d": -0.06401064021049946,
+      "usage_error_count_30d": -0.04678251027023546,
+      "usage_error_rate_30d": 0.006171391144167738,
+      "usage_active_days_30d": -0.000875879635275605,
+      "usage_active_days_90d": 0.3667159817615451,
+      "usage_distinct_features_30d": -0.2113702676254566,
+      "usage_beta_feature_count_30d": -0.01964610221349688,
+      "usage_days_since_last": 0.03674284564082732,
+      "usage_has_history": 0.0,
+      "usage_trend_pct_30d": -0.0007614473786980931,
+      "tickets_count_30d": -0.01075886631909776,
+      "tickets_count_90d": 0.012624537962738382,
+      "tickets_count_lifetime": 0.07291172861022807,
+      "tickets_unresolved_count": 0.00036564167697488695,
+      "tickets_has_unresolved": 0.00036564167697488695,
+      "tickets_urgent_count_90d": 0.08534606322917004,
+      "tickets_high_or_urgent_count_90d": -0.09584941336403485,
+      "tickets_escalated_count_90d": -0.0030925436914568303,
+      "tickets_avg_satisfaction_90d": 0.05820832547370949,
+      "tickets_has_unrated_90d": 0.07528973713952727,
+      "tickets_avg_first_response_minutes_90d": -0.06597814143684395,
+      "churn_prior_count": -0.16808864475743923,
+      "churn_has_prior": 0.2108319324785223,
+      "churn_days_since_last": 0.4409726981302637,
+      "churn_prior_refund_total": -0.1889720777241771
+    },
+    "plain_language_summary": "Estimated model churn score is 0.50. Main factors associated with higher score: sub active count (10), churn days since last (272.0), usage active days 90d (9). Mitigating factors associated with lower score: sub total active seats (342), usage count 90d (100).",
+    "association_disclaimer": "Statistical Association Note: Feature attributions reflect correlational relationships learned by the Logistic Regression model from historical observations. They quantify how much each feature shifts the predicted log-odds relative to the background baseline, and do NOT imply a direct causal relationship or guaranteed real-world outcome."
+  },
+  {
+    "account_id": "A-0158bb",
+    "snapshot_date": "2024-10-01",
+    "model_score": 0.3998037026490845,
+    "decision_threshold": 0.5,
+    "predicted_risk_label": 0,
+    "base_value_log_odds": -0.12072901286586724,
+    "predicted_log_odds": -0.4062830806850202,
+    "top_risk_increasing_factors": [
+      {
+        "feature_name": "usage_count_30d",
+        "feature_value": 32,
+        "attribution": 0.316556152071108,
+        "direction": "increases_risk",
+        "feature_description": "Total product action count in the past 30 days (T_obs - 30d, T_obs]."
+      },
+      {
+        "feature_name": "account_country",
+        "feature_value": "DE",
+        "attribution": 0.22663865463254101,
+        "direction": "increases_risk",
+        "feature_description": "Account headquarters country code."
+      },
+      {
+        "feature_name": "usage_duration_secs_30d",
+        "feature_value": 12905.0,
+        "attribution": 0.11947755896144863,
+        "direction": "increases_risk",
+        "feature_description": "Total active product engagement duration in seconds over past 30 days."
+      },
+      {
+        "feature_name": "sub_total_active_seats",
+        "feature_value": 69,
+        "attribution": 0.10862571604879263,
+        "direction": "increases_risk",
+        "feature_description": "Total licensed seats across active subscriptions."
+      },
+      {
+        "feature_name": "usage_active_days_90d",
+        "feature_value": 7,
+        "attribution": 0.10698286550603368,
+        "direction": "increases_risk",
+        "feature_description": "Number of distinct calendar days with feature activity in past 90 days (0-90)."
+      }
+    ],
+    "top_risk_decreasing_factors": [
+      {
+        "feature_name": "usage_distinct_features_30d",
+        "feature_value": 4,
+        "attribution": -0.43891339313511396,
+        "direction": "decreases_risk",
+        "feature_description": "Count of distinct feature modules utilized in past 30 days."
+      },
+      {
+        "feature_name": "account_referral_source",
+        "feature_value": "partner",
+        "attribution": -0.3058499869223957,
+        "direction": "decreases_risk",
+        "feature_description": "Customer acquisition channel (e.g. organic, partner, paid_ad)."
+      },
+      {
+        "feature_name": "account_initial_seats",
+        "feature_value": 5,
+        "attribution": -0.1867840925472556,
+        "direction": "decreases_risk",
+        "feature_description": "Licensed seat count declared at account creation."
+      },
+      {
+        "feature_name": "account_industry",
+        "feature_value": "FinTech",
+        "attribution": -0.16710685626433763,
+        "direction": "decreases_risk",
+        "feature_description": "Account industry domain (e.g. DevTools, FinTech, Healthcare)."
+      },
+      {
+        "feature_name": "sub_billing_frequency",
+        "feature_value": "mixed",
+        "attribution": -0.09977145437355091,
+        "direction": "decreases_risk",
+        "feature_description": "Primary billing interval of active subscriptions ('monthly', 'annual', 'mixed', 'none')."
+      }
+    ],
+    "feature_attributions": {
+      "account_age_days": 0.06936629538281941,
+      "account_industry": -0.16710685626433763,
+      "account_country": 0.22663865463254101,
+      "account_referral_source": -0.3058499869223957,
+      "account_initial_seats": -0.1867840925472556,
+      "account_is_trial": -0.009532554122492305,
+      "sub_active_count": -0.06232025398724158,
+      "sub_current_mrr": 0.05244523846462864,
+      "sub_current_arr": 0.05244523846462986,
+      "sub_total_active_seats": 0.10862571604879263,
+      "sub_tenure_days": 0.03757005088007,
+      "sub_billing_frequency": -0.09977145437355091,
+      "sub_has_auto_renew": 0.017329446310953317,
+      "sub_has_active_trial": -0.03024772178323252,
+      "sub_historical_upgrade_count": -0.03579659089409801,
+      "sub_historical_downgrade_count": -0.0028001403064612245,
+      "usage_count_30d": 0.316556152071108,
+      "usage_count_60d": -0.0890527978260301,
+      "usage_count_90d": -0.02848507999552539,
+      "usage_duration_secs_30d": 0.11947755896144863,
+      "usage_duration_secs_90d": -0.017936680184749646,
+      "usage_error_count_30d": -0.006874566772341977,
+      "usage_error_rate_30d": 0.002456957924529572,
+      "usage_active_days_30d": -0.0018010788746230372,
+      "usage_active_days_90d": 0.10698286550603368,
+      "usage_distinct_features_30d": -0.43891339313511396,
+      "usage_beta_feature_count_30d": 0.07467381030912097,
+      "usage_days_since_last": 0.015685420728590475,
+      "usage_has_history": 0.0,
+      "usage_trend_pct_30d": 0.004564636821734402,
+      "tickets_count_30d": -0.01075886631909776,
+      "tickets_count_90d": 0.012624537962738382,
+      "tickets_count_lifetime": -0.03581189417999927,
+      "tickets_unresolved_count": 0.00036564167697488695,
+      "tickets_has_unresolved": 0.00036564167697488695,
+      "tickets_urgent_count_90d": 0.08534606322917004,
+      "tickets_high_or_urgent_count_90d": -0.09584941336403485,
+      "tickets_escalated_count_90d": -0.0030925436914568303,
+      "tickets_avg_satisfaction_90d": 0.05820832547370949,
+      "tickets_has_unrated_90d": 0.07528973713952727,
+      "tickets_avg_first_response_minutes_90d": -0.06597814143684395,
+      "churn_prior_count": 0.09672285934720376,
+      "churn_has_prior": -0.0938367516880155,
+      "churn_days_since_last": -0.06632182126383986,
+      "churn_prior_refund_total": 0.03562776310028512
+    },
+    "plain_language_summary": "Estimated model churn score is 0.40. Main factors associated with higher score: usage count 30d (32), account country (DE), usage duration secs 30d (12905.0). Mitigating factors associated with lower score: usage distinct features 30d (4), account referral source (partner).",
+    "association_disclaimer": "Statistical Association Note: Feature attributions reflect correlational relationships learned by the Logistic Regression model from historical observations. They quantify how much each feature shifts the predicted log-odds relative to the background baseline, and do NOT imply a direct causal relationship or guaranteed real-world outcome."
+  },
+  {
+    "account_id": "A-019782",
+    "snapshot_date": "2024-10-01",
+    "model_score": 0.08729546965574213,
+    "decision_threshold": 0.5,
+    "predicted_risk_label": 0,
+    "base_value_log_odds": -0.12072901286586724,
+    "predicted_log_odds": -2.3471136356621507,
+    "top_risk_increasing_factors": [
+      {
+        "feature_name": "sub_active_count",
+        "feature_value": 7,
+        "attribution": 0.6192497032497294,
+        "direction": "increases_risk",
+        "feature_description": "Count of subscriptions actively un-terminated at snapshot date."
+      },
+      {
+        "feature_name": "usage_active_days_90d",
+        "feature_value": 10,
+        "attribution": 0.49658253988930073,
+        "direction": "increases_risk",
+        "feature_description": "Number of distinct calendar days with feature activity in past 90 days (0-90)."
+      },
+      {
+        "feature_name": "tickets_high_or_urgent_count_90d",
+        "feature_value": 1,
+        "attribution": 0.3129735581634063,
+        "direction": "increases_risk",
+        "feature_description": "Count of tickets with priority in ('high', 'urgent') submitted in past 90 days."
+      },
+      {
+        "feature_name": "tickets_avg_first_response_minutes_90d",
+        "feature_value": 166.0,
+        "attribution": 0.24776957724736445,
+        "direction": "increases_risk",
+        "feature_description": "Mean first response time in minutes for tickets submitted in past 90 days."
+      },
+      {
+        "feature_name": "usage_trend_pct_30d",
+        "feature_value": -0.7625,
+        "attribution": 0.15096537628112278,
+        "direction": "increases_risk",
+        "feature_description": "Relative velocity change: (usage_30d - usage_prev_30d) / max(usage_prev_30d, 1.0)."
+      }
+    ],
+    "top_risk_decreasing_factors": [
+      {
+        "feature_name": "tickets_urgent_count_90d",
+        "feature_value": 1,
+        "attribution": -0.7188917232931477,
+        "direction": "decreases_risk",
+        "feature_description": "Count of tickets with priority='urgent' submitted in past 90 days."
+      },
+      {
+        "feature_name": "usage_count_60d",
+        "feature_value": 99,
+        "attribution": -0.6010063614927229,
+        "direction": "decreases_risk",
+        "feature_description": "Total product action count in the past 60 days (T_obs - 60d, T_obs]."
+      },
+      {
+        "feature_name": "sub_tenure_days",
+        "feature_value": 481,
+        "attribution": -0.5589470835239071,
+        "direction": "decreases_risk",
+        "feature_description": "Days from customer's earliest subscription start date to snapshot date."
+      },
+      {
+        "feature_name": "usage_count_90d",
+        "feature_value": 110,
+        "attribution": -0.4323853402575993,
+        "direction": "decreases_risk",
+        "feature_description": "Total product action count in the past 90 days (T_obs - 90d, T_obs]."
+      },
+      {
+        "feature_name": "account_age_days",
+        "feature_value": 531,
+        "attribution": -0.38395035468784744,
+        "direction": "decreases_risk",
+        "feature_description": "Days between account creation (signup_date) and snapshot date."
+      }
+    ],
+    "feature_attributions": {
+      "account_age_days": -0.38395035468784744,
+      "account_industry": -0.2782109582372688,
+      "account_country": -0.26004366301820353,
+      "account_referral_source": -0.07465310247753357,
+      "account_initial_seats": -0.10495961494429912,
+      "account_is_trial": -0.009532554122492305,
+      "sub_active_count": 0.6192497032497294,
+      "sub_current_mrr": 0.013973360426360255,
+      "sub_current_arr": 0.013973360426360586,
+      "sub_total_active_seats": 0.014241313646330571,
+      "sub_tenure_days": -0.5589470835239071,
+      "sub_billing_frequency": -0.09977145437355091,
+      "sub_has_auto_renew": 0.017329446310953317,
+      "sub_has_active_trial": -0.03024772178323252,
+      "sub_historical_upgrade_count": 0.0482403652489403,
+      "sub_historical_downgrade_count": -0.0028001403064612245,
+      "usage_count_30d": -0.06607147221750338,
+      "usage_count_60d": -0.6010063614927229,
+      "usage_count_90d": -0.4323853402575993,
+      "usage_duration_secs_30d": -0.05696602738537203,
+      "usage_duration_secs_90d": -0.15869943724814436,
+      "usage_error_count_30d": -0.04678251027023546,
+      "usage_error_rate_30d": 0.006171391144167738,
+      "usage_active_days_30d": 4.931960407182748e-05,
+      "usage_active_days_90d": 0.49658253988930073,
+      "usage_distinct_features_30d": 0.016172857884200687,
+      "usage_beta_feature_count_30d": -0.01964610221349688,
+      "usage_days_since_last": 0.024710031405263407,
+      "usage_has_history": 0.0,
+      "usage_trend_pct_30d": 0.15096537628112278,
+      "tickets_count_30d": 0.059329439669622654,
+      "tickets_count_90d": -0.014157989694338024,
+      "tickets_count_lifetime": -0.03581189417999927,
+      "tickets_unresolved_count": 0.00036564167697488695,
+      "tickets_has_unresolved": 0.00036564167697488695,
+      "tickets_urgent_count_90d": -0.7188917232931477,
+      "tickets_high_or_urgent_count_90d": 0.3129735581634063,
+      "tickets_escalated_count_90d": -0.0030925436914568303,
+      "tickets_avg_satisfaction_90d": 0.05820832547370949,
+      "tickets_has_unrated_90d": -0.3426198722979582,
+      "tickets_avg_first_response_minutes_90d": 0.24776957724736445,
+      "churn_prior_count": 0.09672285934720376,
+      "churn_has_prior": -0.0938367516880155,
+      "churn_days_since_last": -0.06632182126383986,
+      "churn_prior_refund_total": 0.03562776310028512
+    },
+    "plain_language_summary": "Estimated model churn score is 0.09. Main factors associated with higher score: sub active count (7), usage active days 90d (10), tickets high or urgent count 90d (1). Mitigating factors associated with lower score: tickets urgent count 90d (1), usage count 60d (99).",
+    "association_disclaimer": "Statistical Association Note: Feature attributions reflect correlational relationships learned by the Logistic Regression model from historical observations. They quantify how much each feature shifts the predicted log-odds relative to the background baseline, and do NOT imply a direct causal relationship or guaranteed real-world outcome."
+  },
+  {
+    "account_id": "A-05f0e5",
+    "snapshot_date": "2024-10-01",
+    "model_score": 0.1318065206986264,
+    "decision_threshold": 0.5,
+    "predicted_risk_label": 0,
+    "base_value_log_odds": -0.12072901286586724,
+    "predicted_log_odds": -1.8850794972047182,
+    "top_risk_increasing_factors": [
+      {
+        "feature_name": "sub_active_count",
+        "feature_value": 10,
+        "attribution": 1.1304271711774576,
+        "direction": "increases_risk",
+        "feature_description": "Count of subscriptions actively un-terminated at snapshot date."
+      },
+      {
+        "feature_name": "churn_days_since_last",
+        "feature_value": 261.0,
+        "attribution": 0.4205322596198785,
+        "direction": "increases_risk",
+        "feature_description": "Days from most recent historical churn event (<= T_obs) to snapshot date."
+      },
+      {
+        "feature_name": "usage_count_60d",
+        "feature_value": 20,
+        "attribution": 0.241583878708709,
+        "direction": "increases_risk",
+        "feature_description": "Total product action count in the past 60 days (T_obs - 60d, T_obs]."
+      },
+      {
+        "feature_name": "churn_has_prior",
+        "feature_value": 1,
+        "attribution": 0.2108319324785223,
+        "direction": "increases_risk",
+        "feature_description": "Binary indicator (1/0) if customer experienced at least one prior churn event."
+      },
+      {
+        "feature_name": "account_initial_seats",
+        "feature_value": 32,
+        "attribution": 0.18142605666604847,
+        "direction": "increases_risk",
+        "feature_description": "Licensed seat count declared at account creation."
+      }
+    ],
+    "top_risk_decreasing_factors": [
+      {
+        "feature_name": "sub_total_active_seats",
+        "feature_value": 418,
+        "attribution": -1.3235549986668274,
+        "direction": "decreases_risk",
+        "feature_description": "Total licensed seats across active subscriptions."
+      },
+      {
+        "feature_name": "sub_tenure_days",
+        "feature_value": 478,
+        "attribution": -0.5539343344953023,
+        "direction": "decreases_risk",
+        "feature_description": "Days from customer's earliest subscription start date to snapshot date."
+      },
+      {
+        "feature_name": "account_age_days",
+        "feature_value": 516,
+        "attribution": -0.36690837536188253,
+        "direction": "decreases_risk",
+        "feature_description": "Days between account creation (signup_date) and snapshot date."
+      },
+      {
+        "feature_name": "sub_current_arr",
+        "feature_value": 540984.0,
+        "attribution": -0.340406530674826,
+        "direction": "decreases_risk",
+        "feature_description": "Total Annual Recurring Revenue across active subscriptions."
+      },
+      {
+        "feature_name": "sub_current_mrr",
+        "feature_value": 45082.0,
+        "attribution": -0.34040653067481813,
+        "direction": "decreases_risk",
+        "feature_description": "Total Monthly Recurring Revenue across active subscriptions."
+      }
+    ],
+    "feature_attributions": {
+      "account_age_days": -0.36690837536188253,
+      "account_industry": -0.16710685626433763,
+      "account_country": -0.0919574685680395,
+      "account_referral_source": -0.3058499869223957,
+      "account_initial_seats": 0.18142605666604847,
+      "account_is_trial": -0.009532554122492305,
+      "sub_active_count": 1.1304271711774576,
+      "sub_current_mrr": -0.34040653067481813,
+      "sub_current_arr": -0.340406530674826,
+      "sub_total_active_seats": -1.3235549986668274,
+      "sub_tenure_days": -0.5539343344953023,
+      "sub_billing_frequency": -0.09977145437355091,
+      "sub_has_auto_renew": 0.017329446310953317,
+      "sub_has_active_trial": 0.02346120401241085,
+      "sub_historical_upgrade_count": 0.13227732139197862,
+      "sub_historical_downgrade_count": -0.0028001403064612245,
+      "usage_count_30d": -0.21323594309773855,
+      "usage_count_60d": 0.241583878708709,
+      "usage_count_90d": -0.02848507999552539,
+      "usage_duration_secs_30d": -0.004635909499252571,
+      "usage_duration_secs_90d": 0.005598421395553021,
+      "usage_error_count_30d": -0.006874566772341977,
+      "usage_error_rate_30d": -0.002318741929290927,
+      "usage_active_days_30d": 0.0009745188434192598,
+      "usage_active_days_90d": -0.15275025074947773,
+      "usage_distinct_features_30d": 0.016172857884200687,
+      "usage_beta_feature_count_30d": -0.01964610221349688,
+      "usage_days_since_last": -0.014396614860319313,
+      "usage_has_history": 0.0,
+      "usage_trend_pct_30d": -0.06112373498359976,
+      "tickets_count_30d": -0.01075886631909776,
+      "tickets_count_90d": 0.012624537962738382,
+      "tickets_count_lifetime": 0.03667052101348561,
+      "tickets_unresolved_count": 0.00036564167697488695,
+      "tickets_has_unresolved": 0.00036564167697488695,
+      "tickets_urgent_count_90d": 0.08534606322917004,
+      "tickets_high_or_urgent_count_90d": -0.09584941336403485,
+      "tickets_escalated_count_90d": -0.0030925436914568303,
+      "tickets_avg_satisfaction_90d": 0.05820832547370949,
+      "tickets_has_unrated_90d": 0.07528973713952727,
+      "tickets_avg_first_response_minutes_90d": -0.06597814143684395,
+      "churn_prior_count": -0.16808864475743923,
+      "churn_has_prior": 0.2108319324785223,
+      "churn_days_since_last": 0.4205322596198785,
+      "churn_prior_refund_total": 0.03562776310028512
+    },
+    "plain_language_summary": "Estimated model churn score is 0.13. Main factors associated with higher score: sub active count (10), churn days since last (261.0), usage count 60d (20). Mitigating factors associated with lower score: sub total active seats (418), sub tenure days (478).",
+    "association_disclaimer": "Statistical Association Note: Feature attributions reflect correlational relationships learned by the Logistic Regression model from historical observations. They quantify how much each feature shifts the predicted log-odds relative to the background baseline, and do NOT imply a direct causal relationship or guaranteed real-world outcome."
+  }
+]

@@ -1,0 +1,26 @@
+# Core Application & API
+fastapi>=0.110.0
+uvicorn[standard]>=0.28.0
+pydantic>=2.6.0
+pydantic-settings>=2.2.0
+
+# Database & Migrations
+sqlalchemy>=2.0.28
+alembic>=1.13.0
+psycopg2-binary>=2.9.9
+
+# Data Processing & ML Engineering
+pandas>=2.2.0
+numpy>=1.26.0
+scikit-learn>=1.4.0
+shap>=0.45.0
+joblib>=1.3.2
+
+# Utilities & Auth
+httpx>=0.27.0
+python-dotenv>=1.0.1
+pyjwt[crypto]>=2.8.0
+
+# Background Queues & Tasks
+arq>=0.25.0
+redis>=5.0.0

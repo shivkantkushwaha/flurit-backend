@@ -1,0 +1,5 @@
+sub_key,cust_id,activation_date,cancellation_date,monthly_revenue,annual_revenue,seat_count,billing_cycle,auto_renewal,trial_active
+sub_1,cust_1,2024-01-01,,1500.0,18000.0,10,monthly,1,0
+sub_2,cust_2,2024-01-05,,3500.0,42000.0,25,annual,1,0
+sub_3,cust_3,2024-01-10,2024-06-15,800.0,9600.0,5,monthly,0,0
+sub_4,cust_4,2024-01-15,,6000.0,72000.0,50,monthly,1,0

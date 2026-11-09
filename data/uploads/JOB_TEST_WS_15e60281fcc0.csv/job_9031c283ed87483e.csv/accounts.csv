@@ -1,0 +1,5 @@
+cust_id,created_date,vertical,hq_country,acquisition_channel,licensed_seats,is_trial_flag
+cust_1,2024-01-01,FinTech,US,organic,10,0
+cust_2,2024-01-05,DevTools,GB,partner,25,0
+cust_3,2024-01-10,Healthcare,DE,paid_ad,5,1
+cust_4,2024-01-15,E-commerce,US,referral,50,0
