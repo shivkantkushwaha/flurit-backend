@@ -15,6 +15,7 @@ from fastapi import (
     status,
 )
 from sqlalchemy import func, select
+from sqlalchemy.exc import DBAPIError
 from sqlalchemy.orm import Session
 
 from app.core.config import get_settings
@@ -329,6 +330,7 @@ async def process_custom_dataset(
             options=opts,
             workspace_id=workspace_ctx.workspace_id,
             session=db,
+            user_id=workspace_ctx.user_id,
         )
         logger.info(
             "Completed end-to-end custom dataset processing",
@@ -363,11 +365,20 @@ async def process_custom_dataset(
             detail=err_msg,
             headers=endpoint_headers,
         ) from exc
+    except DBAPIError as exc:
+        sqlstate = getattr(exc.orig, "pgcode", None)
+        logger.error("Could not save dataset results (SQLSTATE %s)", sqlstate,
+                     extra={"workspace_id": workspace_ctx.workspace_id})
+        if sqlstate in {"22001", "42P01", "42703"}:
+            detail = "The database schema could not store the analysis. Ask your administrator to check the database migrations."
+        else:
+            detail = "The database could not save the analysis. Please try again once it is available."
+        raise HTTPException(status_code=503, detail=detail, headers=endpoint_headers) from exc
     except Exception as exc:
         logger.error(
-            "Unexpected error during end-to-end dataset processing",
+            "Unexpected error during end-to-end dataset processing (%s)",
+            type(exc).__name__,
             extra={
-                "error": str(exc),
                 "workspace_id": workspace_ctx.workspace_id,
                 "requested_by": workspace_ctx.user_id,
             },
@@ -377,6 +388,31 @@ async def process_custom_dataset(
             detail="An unexpected error occurred during end-to-end dataset processing.",
             headers=endpoint_headers,
         ) from exc
+
+
+@router.get("/onboarding/analysis/latest", response_model=JobStatusResponse | None)
+def get_latest_analysis(
+    workspace_ctx: WorkspaceContext = Depends(get_workspace_context),
+    db: Session = Depends(get_db),
+) -> JobStatusResponse | None:
+    job = db.scalars(
+        select(ProcessingJob)
+        .where(
+            ProcessingJob.workspace_id == workspace_ctx.workspace_id,
+            ProcessingJob.status == "succeeded",
+            ProcessingJob.result_summary.is_not(None),
+        )
+        .order_by(ProcessingJob.completed_at.desc().nulls_last(), ProcessingJob.created_at.desc())
+        .limit(1)
+    ).first()
+    if job is None:
+        return None
+    return JobStatusResponse(
+        job_id=job.job_id, workspace_id=job.workspace_id, dataset_name=job.dataset_name,
+        status=job.status, progress_pct=job.progress_pct, created_at=job.created_at.isoformat(),
+        completed_at=job.completed_at.isoformat() if job.completed_at else None,
+        result_summary=job.result_summary,
+    )
 
 
 @router.post(

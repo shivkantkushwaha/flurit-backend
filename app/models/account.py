@@ -3,7 +3,7 @@
 from datetime import date
 from typing import TYPE_CHECKING, Optional
 
-from sqlalchemy import Boolean, Date, ForeignKey, Integer, String
+from sqlalchemy import Boolean, Date, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from app.db.base import Base
@@ -31,7 +31,7 @@ class Account(Base):
     account_id: Mapped[str] = mapped_column(String(64), primary_key=True)
     account_name: Mapped[str] = mapped_column(String(255), nullable=False)
     industry: Mapped[str] = mapped_column(String(64), nullable=False)
-    country: Mapped[str] = mapped_column(String(8), nullable=False)
+    country: Mapped[str] = mapped_column(Text, nullable=False)
     signup_date: Mapped[date] = mapped_column(Date, nullable=False, index=True)
     referral_source: Mapped[str] = mapped_column(String(64), nullable=False)
     plan_tier: Mapped[str] = mapped_column(String(64), nullable=False)

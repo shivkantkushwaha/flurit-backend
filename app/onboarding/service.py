@@ -6,7 +6,9 @@ end-to-end ML analysis processing.
 """
 
 import io
+from uuid import uuid4
 from collections.abc import Sequence
+from datetime import UTC, datetime
 from functools import lru_cache
 from pathlib import Path
 
@@ -17,6 +19,7 @@ from starlette.concurrency import run_in_threadpool
 
 from app.core.config import get_settings
 from app.core.logging import get_logger
+from app.models.job import ProcessingJob
 from app.onboarding.mapper import SchemaMapper
 from app.onboarding.processor import DatasetProcessingEngine
 from app.onboarding.profiler import CSVProfiler, sanitize_filename
@@ -116,6 +119,7 @@ class OnboardingService:
         options: ProcessingOptions | None = None,
         workspace_id: str = "ws_default",
         session: Session | None = None,
+        user_id: str | None = None,
     ) -> EndToEndAnalysisResponse:
         """Execute full end-to-end dataset transformation, snapshotting, and ML analysis."""
         raw_dfs = await self._read_files_into_dataframes(files)
@@ -132,10 +136,24 @@ class OnboardingService:
         )
 
         if session is not None:
+            completed_job = None
+            if user_id is not None:
+                completed_job = ProcessingJob(
+                    job_id=f"job_{uuid4().hex}",
+                    workspace_id=workspace_id,
+                    user_id=user_id,
+                    status="succeeded",
+                    progress_pct=100,
+                    dataset_name=", ".join(sanitize_filename(file.filename or "dataset.csv") for file in files)[:255],
+                    mapping_payload=mapping.model_dump(mode="json", exclude={"dataset_profiles"}),
+                    options_payload=options.model_dump(mode="json") if options else None,
+                    completed_at=datetime.now(UTC),
+                )
             try:
                 execution.response.persisted_summary = await run_in_threadpool(
                     self.persistence.persist,
-                    session=session, dataset=canonical_dataset, execution=execution
+                    session=session, dataset=canonical_dataset, execution=execution,
+                    completed_job=completed_job,
                 )
             except Exception:
                 session.rollback()

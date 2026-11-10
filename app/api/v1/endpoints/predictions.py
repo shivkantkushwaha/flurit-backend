@@ -3,7 +3,7 @@
 from datetime import date
 
 from fastapi import APIRouter, Depends, HTTPException, Path, Query, status
-from sqlalchemy import desc, select
+from sqlalchemy import desc, func, select
 from sqlalchemy.orm import Session
 
 from app.core.logging import get_logger
@@ -33,6 +33,7 @@ from app.models.ml import (
     CustomerFeature,
     CustomerPrediction,
     CustomerSegment,
+    CustomerSnapshot,
     ModelRun,
 )
 from app.models.subscription import Subscription
@@ -71,7 +72,7 @@ def _latest_feature(session: Session, workspace_id: str, account_id: str) -> Cus
     summary="List persisted customer intelligence for the authorized workspace",
     tags=["Customer Intelligence"],
 )
-async def list_customers(
+def list_customers(
     page: int = Query(default=1, ge=1),
     page_size: int = Query(default=25, ge=1, le=100),
     search: str | None = Query(default=None, max_length=255),
@@ -81,50 +82,59 @@ async def list_customers(
     db: Session = Depends(get_db),
 ) -> PersistedCustomerListResponse:
     """Return only persisted tenant customers; no synthetic roster rows are ever generated."""
-    statement = select(Account).where(Account.workspace_id == workspace_ctx.workspace_id)
+    latest_prediction_id = (
+        select(CustomerPrediction.prediction_id)
+        .where(CustomerPrediction.workspace_id == Account.workspace_id,
+               CustomerPrediction.account_id == Account.account_id)
+        .order_by(CustomerPrediction.predicted_at.desc(), CustomerPrediction.prediction_id.desc())
+        .limit(1).correlate(Account).scalar_subquery()
+    )
+    latest_feature_id = (
+        select(CustomerFeature.feature_id)
+        .where(CustomerFeature.workspace_id == Account.workspace_id,
+               CustomerFeature.account_id == Account.account_id)
+        .order_by(CustomerFeature.snapshot_date.desc(), CustomerFeature.feature_id.desc())
+        .limit(1).correlate(Account).scalar_subquery()
+    )
+    statement = (
+        select(Account, CustomerPrediction, CustomerSegment, CustomerFeature.current_mrr,
+               CustomerSnapshot.snapshot_date)
+        .outerjoin(CustomerPrediction, CustomerPrediction.prediction_id == latest_prediction_id)
+        .outerjoin(CustomerSnapshot, CustomerSnapshot.snapshot_id == CustomerPrediction.snapshot_id)
+        .outerjoin(CustomerSegment, (CustomerSegment.workspace_id == Account.workspace_id)
+                   & (CustomerSegment.account_id == Account.account_id)
+                   & (CustomerSegment.model_run_id == CustomerPrediction.model_run_id))
+        .outerjoin(CustomerFeature, CustomerFeature.feature_id == latest_feature_id)
+        .where(Account.workspace_id == workspace_ctx.workspace_id)
+    )
     if search and search.strip():
         term = f"%{search.strip()}%"
-        statement = statement.where(
-            (Account.account_id.ilike(term)) | (Account.account_name.ilike(term))
-        )
-    accounts = list(db.scalars(statement.order_by(Account.account_id)).all())
-    items: list[PersistedCustomerSummary] = []
-    for account in accounts:
-        prediction = _latest_prediction(db, workspace_ctx.workspace_id, account.account_id)
-        if risk_tier and (prediction is None or prediction.risk_level != risk_tier):
-            continue
-        segment_row = (
-            db.scalars(
-                select(CustomerSegment)
-                .where(
-                    CustomerSegment.workspace_id == workspace_ctx.workspace_id,
-                    CustomerSegment.account_id == account.account_id,
-                    CustomerSegment.model_run_id == prediction.model_run_id if prediction else False,
-                )
-                .order_by(desc(CustomerSegment.created_at))
-            ).first()
-            if prediction
-            else None
-        )
-        if segment and (segment_row is None or segment_row.cluster_name != segment):
-            continue
-        feature = _latest_feature(db, workspace_ctx.workspace_id, account.account_id)
-        items.append(PersistedCustomerSummary(
+        statement = statement.where(Account.account_id.ilike(term) | Account.account_name.ilike(term))
+    if risk_tier:
+        statement = statement.where(CustomerPrediction.risk_level == risk_tier)
+    if segment:
+        statement = statement.where(CustomerSegment.cluster_name == segment)
+    total = db.scalar(select(func.count()).select_from(statement.subquery())) or 0
+    rows = db.execute(
+        statement.order_by(Account.account_id).offset((page - 1) * page_size).limit(page_size)
+    )
+    items = [
+        PersistedCustomerSummary(
             account_id=account.account_id,
             account_name=None if account.account_name == account.account_id else account.account_name,
             industry=account.industry,
             country=account.country,
-            current_mrr=feature.current_mrr if feature else None,
+            current_mrr=mrr,
             risk_score=prediction.churn_probability if prediction else None,
             risk_tier=prediction.risk_level if prediction else None,
             segment_name=segment_row.cluster_name if segment_row else None,
             assessed_at=_iso(prediction.predicted_at) if prediction else None,
-            snapshot_date=_iso(prediction.snapshot.snapshot_date) if prediction and prediction.snapshot else None,
+            snapshot_date=_iso(snapshot_date),
             score_interpretation=SCORE_INTERPRETATION_NOTICE if prediction else None,
-        ))
-    total = len(items)
-    start = (page - 1) * page_size
-    return PersistedCustomerListResponse(items=items[start:start + page_size], total=total, page=page, page_size=page_size)
+        )
+        for account, prediction, segment_row, mrr, snapshot_date in rows
+    ]
+    return PersistedCustomerListResponse(items=items, total=total, page=page, page_size=page_size)
 
 
 @router.get(

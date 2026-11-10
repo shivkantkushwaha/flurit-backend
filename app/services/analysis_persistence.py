@@ -10,6 +10,7 @@ from sqlalchemy.orm import Session
 
 from app.models.account import Account
 from app.models.churn import ChurnEvent
+from app.models.job import ProcessingJob
 from app.models.ml import CustomerFeature, CustomerSnapshot
 from app.models.subscription import Subscription
 from app.models.ticket import SupportTicket
@@ -59,6 +60,7 @@ class AnalysisPersistenceService:
         session: Session,
         dataset: CanonicalIntermediateDataset,
         execution: ProcessingExecution,
+        completed_job: ProcessingJob | None = None,
     ) -> dict[str, int | str | None]:
         workspace_id = dataset.workspace_id
         self._upsert_accounts(session, dataset, workspace_id)
@@ -97,8 +99,7 @@ class AnalysisPersistenceService:
                 workspace_id=workspace_id,
             )
 
-        session.commit()
-        return {
+        counts = {
             "persisted_accounts": len(dataset.accounts_df),
             "persisted_subscriptions": len(dataset.subscriptions_df),
             "persisted_usage_events": len(dataset.usage_df),
@@ -108,6 +109,12 @@ class AnalysisPersistenceService:
             "persisted_predictions": persisted_predictions,
             "model_run_id": model_run_id,
         }
+        if completed_job is not None:
+            execution.response.persisted_summary = counts
+            completed_job.result_summary = execution.response.model_dump(mode="json")
+            session.add(completed_job)
+        session.commit()
+        return counts
 
     def _upsert_accounts(
         self, session: Session, dataset: CanonicalIntermediateDataset, workspace_id: str

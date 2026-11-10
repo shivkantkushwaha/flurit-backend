@@ -8,6 +8,7 @@ from pathlib import Path
 import httpx
 import pytest
 from sqlalchemy import create_engine, event
+from sqlalchemy.engine import make_url
 from sqlalchemy.orm import Session
 from sqlalchemy.pool import StaticPool
 
@@ -31,13 +32,19 @@ def test_demo_upload_to_persisted_predictions(full_history):
         "support_tickets": {"ticket_id": "ticket_id", "account_id": "account_id", "created_at": "created_at", "priority": "priority", "satisfaction_score": "satisfaction"},
         "churn_events": {"churn_event_id": "churn_id", "account_id": "account_id", "churn_date": "churn_date"},
     }
-    engine = create_engine("sqlite://", poolclass=StaticPool, connect_args={"check_same_thread": False})
+    pg_url = os.getenv("FLURIT_E2E_POSTGRES_URL")
+    if pg_url:
+        url = make_url(pg_url)
+        assert url.get_backend_name() == "postgresql" and url.host in {"127.0.0.1", "::1", "localhost"}
+        engine = create_engine(url, hide_parameters=True)
+    else:
+        engine = create_engine("sqlite://", poolclass=StaticPool, connect_args={"check_same_thread": False})
 
-    @event.listens_for(engine, "connect")
-    def enable_foreign_keys(connection, _record):
-        connection.execute("PRAGMA foreign_keys=ON")
+        @event.listens_for(engine, "connect")
+        def enable_foreign_keys(connection, _record):
+            connection.execute("PRAGMA foreign_keys=ON")
 
-    Base.metadata.create_all(engine)
+        Base.metadata.create_all(engine)
     settings = Settings(_env_file=None, ENVIRONMENT="testing", DATABASE_URL="sqlite://",
                         SUPABASE_ALLOW_HS256=True, SUPABASE_JWT_SECRET="local-integration-only-secret-value",
                         SUPABASE_JWT_ISSUER=None)
@@ -84,8 +91,20 @@ def test_demo_upload_to_persisted_predictions(full_history):
             assert result["sentinel_scoring_used"] is False
             assert result["scoring_summary"]["model_version"] == "1.0.0"
             assert result["persisted_summary"]["persisted_predictions"] > 0
+            saved = await client.get("onboarding/analysis/latest", headers=headers)
+            assert saved.status_code == 200
+            assert saved.json()["result_summary"] == result
+            assert (await client.get("onboarding/analysis/latest", headers=auth("other-tenant"))).json() is None
             roster = (await client.get("customers", headers=headers)).json()
+            assert roster["total"] == 500
+            second_page = (await client.get("customers", headers=headers, params={"page": 2})).json()
+            assert second_page["total"] == roster["total"]
+            assert not ({row["account_id"] for row in roster["items"]} & {row["account_id"] for row in second_page["items"]})
             account = next(item for item in roster["items"] if item["risk_score"] is not None)
+            filtered = (await client.get("customers", headers=headers, params={
+                "risk_tier": account["risk_tier"], "search": account["account_id"],
+            })).json()
+            assert [row["account_id"] for row in filtered["items"]] == [account["account_id"]]
             path = f"customers/{account['account_id']}"
             detail = (await client.get(path, headers=headers)).json()
             assert detail["risk_score"] == account["risk_score"]
