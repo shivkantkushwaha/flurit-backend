@@ -276,6 +276,7 @@ class BatchInferencePipeline:
 
             # Vectorized segmentation
             cluster_assignments = self.service.segmenter.predict_segments(chunk_df)
+            explanations = self.service.explainer.explain_batch(chunk_df, top_k=5)
 
             # 4. Generate local explanations and assemble outputs
             for i, rec in enumerate(valid_chunk_records):
@@ -317,12 +318,7 @@ class BatchInferencePipeline:
                 )
 
                 # SHAP local explanation
-                exp = self.service.explainer.explain_instance(
-                    account_id=rec.account_id,
-                    snapshot_date=snap_date_str,
-                    feature_row=feat_dict,
-                    top_k=5,
-                )
+                exp = explanations[i]
 
                 predictions.append(
                     BatchPredictionOutput(

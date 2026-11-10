@@ -5,7 +5,7 @@ from datetime import date, datetime
 from typing import Any
 
 import pandas as pd
-from sqlalchemy import delete, select
+from sqlalchemy import delete, insert, select
 from sqlalchemy.orm import Session
 
 from app.models.account import Account
@@ -194,19 +194,24 @@ class AnalysisPersistenceService:
                 FeatureUsage.subscription_id.in_(subscription_ids),
             )
         )
-        for _, row in dataset.usage_df.iterrows():
-            session.add(
-                FeatureUsage(
-                    workspace_id=workspace_id,
-                    usage_id=str(row["usage_id"]),
-                    subscription_id=str(row["subscription_id"]),
-                    usage_date=_date(row["usage_date"]),
-                    feature_name=str(row.get("feature_name", "unknown")),
-                    usage_count=int(row.get("usage_count", 1)),
-                    usage_duration_secs=int(row.get("usage_duration_secs", 0)),
-                    error_count=int(row.get("error_count", 0)),
-                    is_beta_feature=bool(row.get("is_beta_feature", False)),
-                )
+        for offset in range(0, len(dataset.usage_df), 1000):
+            rows = dataset.usage_df.iloc[offset : offset + 1000].to_dict("records")
+            session.execute(
+                insert(FeatureUsage),
+                [
+                    {
+                        "workspace_id": workspace_id,
+                        "usage_id": str(row["usage_id"]),
+                        "subscription_id": str(row["subscription_id"]),
+                        "usage_date": _date(row["usage_date"]),
+                        "feature_name": str(row.get("feature_name", "unknown")),
+                        "usage_count": int(row.get("usage_count", 1)),
+                        "usage_duration_secs": int(row.get("usage_duration_secs", 0)),
+                        "error_count": int(row.get("error_count", 0)),
+                        "is_beta_feature": bool(row.get("is_beta_feature", False)),
+                    }
+                    for row in rows
+                ],
             )
         session.flush()
 

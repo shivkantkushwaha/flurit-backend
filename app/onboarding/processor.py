@@ -442,7 +442,7 @@ class DatasetProcessingEngine:
         for p in predictions:
             for f in p.top_risk_increasing_factors:
                 feat = f["feature_name"]
-                factor_impacts[feat] = factor_impacts.get(feat, 0.0) + abs(f.get("shap_value", 0.0))
+                factor_impacts[feat] = factor_impacts.get(feat, 0.0) + abs(f["attribution"])
 
         top_increasing = [
             {"feature_name": k, "mean_absolute_shap": round(v / len(predictions), 4)}
@@ -451,17 +451,16 @@ class DatasetProcessingEngine:
 
         # Prioritization quadrants
         prioritize_records: list[ScoredCustomerRecord] = []
+        latest_by_account = {}
         for p in predictions:
-            matching_row = records_df[records_df["account_id"] == p.account_id]
-            mrr_val = (
-                float(matching_row["sub_current_mrr"].iloc[0])
-                if not matching_row.empty and "sub_current_mrr" in matching_row
-                else 0.0
-            )
+            previous = latest_by_account.get(p.account_id)
+            if previous is None or p.snapshot_date > previous.snapshot_date:
+                latest_by_account[p.account_id] = p
+        for p in latest_by_account.values():
             prioritize_records.append(
                 ScoredCustomerRecord(
                     account_id=p.account_id,
-                    sub_current_mrr=mrr_val,
+                    sub_current_mrr=float(p.feature_payload["sub_current_mrr"]),
                     model_score=p.model_score,
                 )
             )

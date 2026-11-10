@@ -171,29 +171,16 @@ class ModelExplainer:
         Returns:
             PredictionExplanation object containing local factors, summary, and disclaimer.
         """
-        if isinstance(feature_row, dict):
-            row_df = pd.DataFrame([feature_row])[FEATURE_NAMES]
-        else:
-            row_df = pd.DataFrame([feature_row.to_dict()])[FEATURE_NAMES]
+        row = dict(feature_row)
+        row["account_id"] = account_id
+        row["snapshot_date"] = snapshot_date
+        return self.explain_batch(pd.DataFrame([row]), top_k=top_k)[0]
 
-        # Model prediction
-        prob = float(self.pipeline.predict_proba(row_df)[0, 1])
-        label = int(prob >= self.decision_threshold)
-
-        # Transformed features & decision function
-        X_trans = self.preprocessor.transform(row_df)
-        decision_val = float(self.classifier.decision_function(X_trans)[0])
-
-        # SHAP attribution
-        shap_obj = self.explainer(X_trans)
-        raw_shap = shap_obj.values[0]
-        base_val = float(shap_obj.base_values[0])
-
-        # Aggregate back to canonical 45 features
+    def _format_explanation(
+        self, account_id: str, snapshot_date: str, raw_vals: dict[str, Any],
+        prob: float, decision_val: float, raw_shap: np.ndarray, base_val: float, top_k: int,
+    ) -> PredictionExplanation:
         canonical_attributions = self._aggregate_shap_to_canonical(raw_shap)
-
-        # Separate positive (risk-increasing) and negative (risk-decreasing) factors
-        raw_vals = row_df.iloc[0].to_dict()
 
         increasing: list[FactorAttribution] = []
         decreasing: list[FactorAttribution] = []
@@ -242,7 +229,7 @@ class ModelExplainer:
             snapshot_date=str(snapshot_date),
             model_score=prob,
             decision_threshold=self.decision_threshold,
-            predicted_risk_label=label,
+            predicted_risk_label=int(prob >= self.decision_threshold),
             base_value_log_odds=base_val,
             predicted_log_odds=decision_val,
             top_risk_increasing_factors=top_increasing,
@@ -258,18 +245,20 @@ class ModelExplainer:
         top_k: int = 5,
     ) -> list[PredictionExplanation]:
         """Explain predictions for a batch of customer snapshots."""
-        explanations: list[PredictionExplanation] = []
-        for _, row in features_df.iterrows():
-            acc_id = str(row.get("account_id", "unknown"))
-            snap_date = str(row.get("snapshot_date", "unknown"))
-            exp = self.explain_instance(
-                account_id=acc_id,
-                snapshot_date=snap_date,
-                feature_row=row,
-                top_k=top_k,
+        if features_df.empty:
+            return []
+        transformed = self.preprocessor.transform(features_df[FEATURE_NAMES])
+        probabilities = self.classifier.predict_proba(transformed)[:, 1]
+        decisions = self.classifier.decision_function(transformed)
+        attributions = self.explainer(transformed)
+        return [
+            self._format_explanation(
+                str(row.get("account_id", "unknown")), str(row.get("snapshot_date", "unknown")),
+                row, float(probabilities[i]), float(decisions[i]), attributions.values[i],
+                float(attributions.base_values[i]), top_k,
             )
-            explanations.append(exp)
-        return explanations
+            for i, row in enumerate(features_df.to_dict("records"))
+        ]
 
     def compute_global_importance(
         self,

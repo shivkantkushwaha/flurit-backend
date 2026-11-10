@@ -178,93 +178,82 @@ class PredictionRepository:
 
         try:
             with session.begin_nested():
-                for output in predictions:
-                    # 1. Check for existing prediction by (workspace_id, model_run_id, account_id, snapshot_id)
-                    pred_stmt = select(CustomerPrediction).where(
-                        CustomerPrediction.workspace_id == workspace_id,
-                        CustomerPrediction.model_run_id == model_run_id,
-                        CustomerPrediction.account_id == output.account_id,
+                scope = (
+                    CustomerPrediction.workspace_id == workspace_id,
+                    CustomerPrediction.model_run_id == model_run_id,
+                    CustomerPrediction.account_id.in_(set(account_ids)),
+                )
+                stored = {
+                    (row.account_id, row.snapshot_id): row
+                    for row in session.scalars(select(CustomerPrediction).where(*scope))
+                }
+                explanations = {
+                    row.prediction_id: row
+                    for row in session.scalars(
+                        select(CustomerExplanation)
+                        .join(CustomerPrediction, CustomerExplanation.prediction_id == CustomerPrediction.prediction_id)
+                        .where(CustomerExplanation.workspace_id == workspace_id, *scope)
                     )
-                    if output.snapshot_id is not None:
-                        pred_stmt = pred_stmt.where(
-                            CustomerPrediction.snapshot_id == output.snapshot_id
+                }
+                segments = {
+                    row.account_id: row
+                    for row in session.scalars(
+                        select(CustomerSegment).where(
+                            CustomerSegment.workspace_id == workspace_id,
+                            CustomerSegment.model_run_id == model_run_id,
+                            CustomerSegment.account_id.in_(set(account_ids)),
                         )
-                    else:
-                        pred_stmt = pred_stmt.where(CustomerPrediction.snapshot_id.is_(None))
+                    )
+                }
 
-                    existing_pred = session.scalars(pred_stmt).first()
-
-                    if existing_pred is not None:
-                        # Idempotent update
-                        existing_pred.churn_probability = output.model_score
-                        existing_pred.risk_level = output.risk_tier
-                        existing_pred.predicted_at = now_dt
-                        pred_record = existing_pred
-                    else:
-                        # Insert new prediction
-                        pred_record = CustomerPrediction(
+                for output in predictions:
+                    key = (output.account_id, output.snapshot_id)
+                    record = stored.get(key)
+                    if record is None:
+                        record = CustomerPrediction(
                             workspace_id=workspace_id,
                             model_run_id=model_run_id,
                             account_id=output.account_id,
                             snapshot_id=output.snapshot_id,
-                            churn_probability=output.model_score,
-                            risk_level=output.risk_tier,
-                            predicted_at=now_dt,
                         )
-                        session.add(pred_record)
-                        session.flush()
+                        session.add(record)
+                        stored[key] = record
+                    record.churn_probability = output.model_score
+                    record.risk_level = output.risk_tier
+                    record.predicted_at = now_dt
 
-                    # 2. Upsert CustomerExplanation linked to prediction
-                    exp_stmt = select(CustomerExplanation).where(
-                        CustomerExplanation.workspace_id == workspace_id,
-                        CustomerExplanation.prediction_id == pred_record.prediction_id,
-                    )
-                    existing_exp = session.scalars(exp_stmt).first()
-
-                    if existing_exp is not None:
-                        existing_exp.top_risk_factors = output.top_risk_increasing_factors
-                        existing_exp.shap_values = output.shap_values
-                        existing_exp.summary_text = output.plain_language_summary
-                        existing_exp.computed_at = now_dt
-                    else:
-                        exp_record = CustomerExplanation(
+                # Allocate IDs together before writing dependent explanations.
+                session.flush()
+                for output in predictions:
+                    record = stored[(output.account_id, output.snapshot_id)]
+                    explanation = explanations.get(record.prediction_id)
+                    if explanation is None:
+                        explanation = CustomerExplanation(
                             workspace_id=workspace_id,
-                            prediction_id=pred_record.prediction_id,
+                            prediction_id=record.prediction_id,
                             account_id=output.account_id,
-                            top_risk_factors=output.top_risk_increasing_factors,
-                            shap_values=output.shap_values,
-                            summary_text=output.plain_language_summary,
-                            computed_at=now_dt,
                         )
-                        session.add(exp_record)
+                        session.add(explanation)
+                        explanations[record.prediction_id] = explanation
+                    explanation.top_risk_factors = output.top_risk_increasing_factors
+                    explanation.shap_values = output.shap_values
+                    explanation.summary_text = output.plain_language_summary
+                    explanation.computed_at = now_dt
 
-                    # 3. Upsert CustomerSegment for (workspace_id, model_run_id, account_id)
-                    seg_stmt = select(CustomerSegment).where(
-                        CustomerSegment.workspace_id == workspace_id,
-                        CustomerSegment.model_run_id == model_run_id,
-                        CustomerSegment.account_id == output.account_id,
-                    )
-                    existing_seg = session.scalars(seg_stmt).first()
-
-                    if existing_seg is not None:
-                        existing_seg.cluster_id = output.cluster_id
-                        existing_seg.cluster_name = output.cluster_name
-                        existing_seg.risk_tier = output.risk_tier
-                        existing_seg.value_tier = output.value_tier
-                        existing_seg.created_at = now_dt
-                    else:
-                        seg_record = CustomerSegment(
+                    segment = segments.get(output.account_id)
+                    if segment is None:
+                        segment = CustomerSegment(
                             workspace_id=workspace_id,
                             model_run_id=model_run_id,
                             account_id=output.account_id,
-                            cluster_id=output.cluster_id,
-                            cluster_name=output.cluster_name,
-                            risk_tier=output.risk_tier,
-                            value_tier=output.value_tier,
-                            created_at=now_dt,
                         )
-                        session.add(seg_record)
-
+                        session.add(segment)
+                        segments[output.account_id] = segment
+                    segment.cluster_id = output.cluster_id
+                    segment.cluster_name = output.cluster_name
+                    segment.risk_tier = output.risk_tier
+                    segment.value_tier = output.value_tier
+                    segment.created_at = now_dt
                     saved_count += 1
 
                 session.flush()

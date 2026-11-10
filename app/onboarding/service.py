@@ -13,6 +13,7 @@ from pathlib import Path
 import pandas as pd
 from fastapi import UploadFile
 from sqlalchemy.orm import Session
+from starlette.concurrency import run_in_threadpool
 
 from app.core.config import get_settings
 from app.core.logging import get_logger
@@ -70,7 +71,9 @@ class OnboardingService:
             safe_name = sanitize_filename(orig_name)
             raw_bytes = await self._stream_file_bytes(upload, safe_name, max_size)
 
-            profile = self.profiler.profile_bytes(raw_bytes=raw_bytes, original_filename=safe_name)
+            profile = await run_in_threadpool(
+                self.profiler.profile_bytes, raw_bytes=raw_bytes, original_filename=safe_name
+            )
             profiles.append(profile)
 
         message = (
@@ -119,7 +122,9 @@ class OnboardingService:
         canonical_dataset = self.transformer.transform(
             raw_dfs=raw_dfs, mapping=mapping, workspace_id=workspace_id
         )
-        execution = self.processor.process_with_artifacts(dataset=canonical_dataset, options=options)
+        execution = await run_in_threadpool(
+            self.processor.process_with_artifacts, dataset=canonical_dataset, options=options
+        )
         readiness = self.mapper.assess_readiness(mapping)
         execution.response.feature_coverage = readiness.feature_coverage
         execution.response.sentinel_scoring_used = bool(
@@ -128,7 +133,8 @@ class OnboardingService:
 
         if session is not None:
             try:
-                execution.response.persisted_summary = self.persistence.persist(
+                execution.response.persisted_summary = await run_in_threadpool(
+                    self.persistence.persist,
                     session=session, dataset=canonical_dataset, execution=execution
                 )
             except Exception:
