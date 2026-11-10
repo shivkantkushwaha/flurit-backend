@@ -198,6 +198,7 @@ class FeatureUsageConceptMapping(BaseModel):
         description="Column containing subscription ID foreign key.",
     )
     usage_id: str | None = Field(default=None, description="Column containing usage event ID.")
+    usage_count: str | None = Field(default=None, description="Column containing the number of usage events represented by each row.")
     feature_name: str | None = Field(
         default=None, description="Column containing feature or action name."
     )

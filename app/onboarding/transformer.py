@@ -414,7 +414,11 @@ class SchemaTransformer:
             if m.feature_name and m.feature_name in df
             else "core_feature"
         )
-        data["usage_count"] = 1
+        data["usage_count"] = (
+            pd.to_numeric(df[m.usage_count], errors="coerce").fillna(0).clip(lower=0).astype(int)
+            if m.usage_count and m.usage_count in df
+            else 1
+        )
         data["usage_duration_secs"] = (
             pd.to_numeric(df[m.duration_secs], errors="coerce").fillna(0.0)
             if m.duration_secs and m.duration_secs in df
