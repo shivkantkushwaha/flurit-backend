@@ -41,6 +41,7 @@ class BatchPredictionService:
         session: Session,
         records: list[BatchInputRecord] | list[dict[str, Any]],
         batch_size: int | None = None,
+        workspace_id: str = "ws_default",
     ) -> BatchPipelineSummary:
         """Execute batch inference across customer records and persist outputs to database.
 
@@ -87,6 +88,7 @@ class BatchPredictionService:
                     session=session,
                     model_run_id=model_run.model_run_id,
                     predictions=summary.predictions,
+                    workspace_id=workspace_id,
                 )
 
                 # Commit full transaction

@@ -249,6 +249,65 @@ class CustomerRiskResponse(BaseModel):
     score_interpretation: str
 
 
+class PersistedCustomerSummary(BaseModel):
+    """Tenant-scoped customer roster entry backed by durable onboarding artifacts."""
+
+    account_id: str
+    account_name: str | None = None
+    industry: str
+    country: str
+    current_mrr: float | None = None
+    risk_score: float | None = Field(default=None, ge=0.0, le=1.0)
+    risk_tier: str | None = None
+    segment_name: str | None = None
+    assessed_at: str | None = None
+    snapshot_date: str | None = None
+    score_interpretation: str | None = None
+
+
+class PersistedCustomerListResponse(BaseModel):
+    items: list[PersistedCustomerSummary]
+    total: int
+    page: int
+    page_size: int
+
+
+class PersistedCustomerDetailResponse(BaseModel):
+    account_id: str
+    account_name: str | None = None
+    industry: str
+    country: str
+    signup_date: str
+    plan_tier: str | None = None
+    current_mrr: float | None = None
+    risk_score: float | None = None
+    risk_tier: str | None = None
+    segment_name: str | None = None
+    snapshot_date: str | None = None
+    assessed_at: str | None = None
+    score_interpretation: str | None = None
+    explanation_summary: str | None = None
+    top_risk_factors: list[dict[str, Any]] = Field(default_factory=list)
+    subscriptions: list[dict[str, Any]] = Field(default_factory=list)
+
+
+class PersistedCustomerHistoryItem(BaseModel):
+    prediction_id: int
+    snapshot_date: str | None = None
+    assessed_at: str
+    model_name: str
+    model_version: str
+    risk_score: float = Field(ge=0.0, le=1.0)
+    risk_tier: str
+    segment_name: str | None = None
+    score_interpretation: str
+
+
+class PersistedCustomerHistoryResponse(BaseModel):
+    account_id: str
+    items: list[PersistedCustomerHistoryItem]
+
+
 class ScoredCustomerRecord(BaseModel):
     """Individual customer record for portfolio prioritization."""
 

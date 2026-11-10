@@ -491,7 +491,8 @@ class EndToEndAnalysisResponse(BaseModel):
     model_config = ConfigDict(extra="ignore")
 
     processing_status: str = Field(
-        ..., description="Execution status: SUCCESS, PARTIAL_SUCCESS, BLOCKED, or FAILED."
+        ...,
+        description="Execution status: SUCCESS, PARTIAL_SUCCESS, NOT_READY, INFERENCE_FAILED, or FAILED.",
     )
     analysis_ready: bool = Field(
         ..., description="Whether relational structure and mandatory concepts were parsed."
@@ -503,6 +504,18 @@ class EndToEndAnalysisResponse(BaseModel):
     existing_model_scoring_ready: bool = Field(
         ...,
         description="Whether dataset is semantically compatible for scoring with frozen champion model.",
+    )
+    feature_coverage: FeatureCoverageSummary | None = Field(
+        default=None,
+        description="Canonical 45-feature coverage from the submitted schema mapping.",
+    )
+    sentinel_scoring_used: bool = Field(
+        default=False,
+        description="True only when the caller explicitly enabled sentinel-based scoring.",
+    )
+    persisted_summary: dict[str, Any] | None = Field(
+        default=None,
+        description="Counts and model run identifier after durable persistence completes.",
     )
     scoring_blockers: list[str] = Field(
         default_factory=list,

@@ -8,6 +8,7 @@ Orchestrates the complete execution pipeline for customer-onboarded datasets:
 Enforces honest compatibility boundaries without fabricating customer data.
 """
 
+from dataclasses import dataclass
 from datetime import date, datetime, timedelta
 
 import numpy as np
@@ -15,7 +16,7 @@ import pandas as pd
 
 from app.core.logging import get_logger
 from app.ml.features.pipeline import FeaturePipeline
-from app.ml.inference.batch import BatchInferencePipeline, BatchInputRecord
+from app.ml.inference.batch import BatchInferencePipeline, BatchInputRecord, BatchPipelineSummary
 from app.ml.inference.schemas import PrioritizationQuadrantsRequest, ScoredCustomerRecord
 from app.ml.inference.service import SCORE_INTERPRETATION_NOTICE, get_inference_service
 from app.ml.snapshots.engine import SnapshotEngine
@@ -30,6 +31,22 @@ from app.onboarding.schemas import (
 from app.onboarding.transformer import CanonicalIntermediateDataset
 
 logger = get_logger("flurit.onboarding.processor")
+
+
+@dataclass
+class ProcessingExecution:
+    """Internal artifacts from one processing run used for durable persistence.
+
+    This object is deliberately not an API schema. The public response remains an
+    aggregate report while the service layer can atomically persist the underlying
+    canonical records and successful model outputs.
+    """
+
+    response: EndToEndAnalysisResponse
+    snapshots_df: pd.DataFrame | None
+    feature_matrix: pd.DataFrame | None
+    batch_summary: BatchPipelineSummary | None
+    model_metadata: dict[str, object] | None = None
 
 
 class DatasetProcessingEngine:
@@ -84,6 +101,14 @@ class DatasetProcessingEngine:
         options: ProcessingOptions | None = None,
     ) -> EndToEndAnalysisResponse:
         """Run full end-to-end dataset transformation, snapshotting, and model analysis."""
+        return self.process_with_artifacts(dataset, options).response
+
+    def process_with_artifacts(
+        self,
+        dataset: CanonicalIntermediateDataset,
+        options: ProcessingOptions | None = None,
+    ) -> ProcessingExecution:
+        """Run processing and retain internal artifacts for persistence by the service layer."""
         opts = options or ProcessingOptions()
 
         analysis_ready, label_ready, scoring_ready, blockers, warnings, next_steps = (
@@ -92,17 +117,22 @@ class DatasetProcessingEngine:
         all_warnings = list(dataset.warnings) + warnings
 
         if not analysis_ready:
-            return EndToEndAnalysisResponse(
-                processing_status="FAILED",
-                analysis_ready=False,
-                label_construction_ready=False,
-                existing_model_scoring_ready=False,
-                scoring_blockers=blockers,
-                rejection_summary=dataset.rejection_summary,
-                snapshot_summary=None,
-                scoring_summary=None,
-                warnings=all_warnings,
-                next_steps=next_steps,
+            return ProcessingExecution(
+                response=EndToEndAnalysisResponse(
+                    processing_status="FAILED",
+                    analysis_ready=False,
+                    label_construction_ready=False,
+                    existing_model_scoring_ready=False,
+                    scoring_blockers=blockers,
+                    rejection_summary=dataset.rejection_summary,
+                    snapshot_summary=None,
+                    scoring_summary=None,
+                    warnings=all_warnings,
+                    next_steps=next_steps,
+                ),
+                snapshots_df=None,
+                feature_matrix=None,
+                batch_summary=None,
             )
 
         # ----------------------------------------------------------------------
@@ -187,32 +217,51 @@ class DatasetProcessingEngine:
         # 3. Model Scoring, Explainability, and Portfolio Prioritization
         # ----------------------------------------------------------------------
         scoring_summary: ScoringSummary | None = None
+        batch_summary: BatchPipelineSummary | None = None
         can_score = (scoring_ready or opts.allow_sentinel_scoring) and (
             feature_matrix is not None and not feature_matrix.empty
         )
 
         if can_score and feature_matrix is not None:
-            scoring_summary = self._execute_scoring_and_prioritization(
-                feature_matrix=feature_matrix,
-                opts=opts,
-            )
-            status = "SUCCESS" if scoring_ready else "PARTIAL_SUCCESS"
+            try:
+                scoring_summary, batch_summary = self._execute_scoring_and_prioritization(
+                    feature_matrix=feature_matrix,
+                    opts=opts,
+                )
+                status = "SUCCESS" if scoring_ready else "PARTIAL_SUCCESS"
+            except Exception:
+                logger.exception("Model inference failed after successful dataset transformation")
+                all_warnings.append(
+                    "Model inference failed. Customer source records and feature artifacts were persisted, but no predictions were written."
+                )
+                blockers.append("Model inference could not complete for this run.")
+                next_steps.append("Retry processing after the model inference service is available.")
+                status = "INFERENCE_FAILED"
         elif not scoring_ready:
-            status = "PARTIAL_SUCCESS" if label_ready else "BLOCKED"
+            # Transformation/snapshotting completed, but model scoring was correctly withheld.
+            # Preserve PARTIAL_SUCCESS for callers that received usable artifacts; use NOT_READY
+            # only where label construction also could not produce a completed analysis.
+            status = "PARTIAL_SUCCESS" if label_ready else "NOT_READY"
         else:
             status = "FAILED"
 
-        return EndToEndAnalysisResponse(
-            processing_status=status,
-            analysis_ready=analysis_ready,
-            label_construction_ready=label_ready,
-            existing_model_scoring_ready=scoring_ready,
-            scoring_blockers=blockers,
-            rejection_summary=dataset.rejection_summary,
-            snapshot_summary=snapshot_summary,
-            scoring_summary=scoring_summary,
-            warnings=all_warnings,
-            next_steps=next_steps,
+        return ProcessingExecution(
+            response=EndToEndAnalysisResponse(
+                processing_status=status,
+                analysis_ready=analysis_ready,
+                label_construction_ready=label_ready,
+                existing_model_scoring_ready=scoring_ready,
+                scoring_blockers=blockers,
+                rejection_summary=dataset.rejection_summary,
+                snapshot_summary=snapshot_summary,
+                scoring_summary=scoring_summary,
+                warnings=all_warnings,
+                next_steps=next_steps,
+            ),
+            snapshots_df=snapshots_df,
+            feature_matrix=feature_matrix,
+            batch_summary=batch_summary,
+            model_metadata=self.inference_service.metadata if batch_summary else None,
         )
 
     def _evaluate_readiness_boundaries(
@@ -333,7 +382,7 @@ class DatasetProcessingEngine:
         self,
         feature_matrix: pd.DataFrame,
         opts: ProcessingOptions,
-    ) -> ScoringSummary:
+    ) -> tuple[ScoringSummary, BatchPipelineSummary]:
         """Run batch scoring, SHAP explainability, and portfolio prioritization."""
         self.inference_service._ensure_loaded()
         assert self.inference_service.segmenter is not None
@@ -446,4 +495,4 @@ class DatasetProcessingEngine:
             prioritization_quadrants=quadrants_summary,
             top_global_risk_increasing_factors=top_increasing,
             score_interpretation_notice=SCORE_INTERPRETATION_NOTICE,
-        )
+        ), batch_summary

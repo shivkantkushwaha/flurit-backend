@@ -269,6 +269,7 @@ async def process_custom_dataset(
         default=None, description="Optional JSON-serialized ProcessingOptions"
     ),
     workspace_ctx: WorkspaceContext = Depends(get_workspace_context),
+    db: Session = Depends(get_db),
     service: OnboardingService = Depends(get_onboarding_service),
 ) -> EndToEndAnalysisResponse:
     """Execute complete end-to-end processing pipeline on uploaded customer datasets.
@@ -327,6 +328,7 @@ async def process_custom_dataset(
             mapping=mapping_request,
             options=opts,
             workspace_id=workspace_ctx.workspace_id,
+            session=db,
         )
         logger.info(
             "Completed end-to-end custom dataset processing",

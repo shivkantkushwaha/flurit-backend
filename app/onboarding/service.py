@@ -12,6 +12,7 @@ from pathlib import Path
 
 import pandas as pd
 from fastapi import UploadFile
+from sqlalchemy.orm import Session
 
 from app.core.config import get_settings
 from app.core.logging import get_logger
@@ -28,6 +29,7 @@ from app.onboarding.schemas import (
     SchemaMappingRequest,
 )
 from app.onboarding.transformer import SchemaTransformer
+from app.services.analysis_persistence import AnalysisPersistenceService
 
 logger = get_logger("flurit.onboarding.service")
 
@@ -43,12 +45,14 @@ class OnboardingService:
         mapper: SchemaMapper | None = None,
         transformer: SchemaTransformer | None = None,
         processor: DatasetProcessingEngine | None = None,
+        persistence: AnalysisPersistenceService | None = None,
     ) -> None:
         self.settings = get_settings()
         self.profiler = profiler or CSVProfiler()
         self.mapper = mapper or SchemaMapper()
         self.transformer = transformer or SchemaTransformer()
         self.processor = processor or DatasetProcessingEngine()
+        self.persistence = persistence or AnalysisPersistenceService()
 
     async def profile_uploaded_files(
         self,
@@ -108,13 +112,29 @@ class OnboardingService:
         mapping: SchemaMappingRequest,
         options: ProcessingOptions | None = None,
         workspace_id: str = "ws_default",
+        session: Session | None = None,
     ) -> EndToEndAnalysisResponse:
         """Execute full end-to-end dataset transformation, snapshotting, and ML analysis."""
         raw_dfs = await self._read_files_into_dataframes(files)
         canonical_dataset = self.transformer.transform(
             raw_dfs=raw_dfs, mapping=mapping, workspace_id=workspace_id
         )
-        return self.processor.process(dataset=canonical_dataset, options=options)
+        execution = self.processor.process_with_artifacts(dataset=canonical_dataset, options=options)
+        readiness = self.mapper.assess_readiness(mapping)
+        execution.response.feature_coverage = readiness.feature_coverage
+        execution.response.sentinel_scoring_used = bool(
+            options and options.allow_sentinel_scoring and not execution.response.existing_model_scoring_ready
+        )
+
+        if session is not None:
+            try:
+                execution.response.persisted_summary = self.persistence.persist(
+                    session=session, dataset=canonical_dataset, execution=execution
+                )
+            except Exception:
+                session.rollback()
+                raise
+        return execution.response
 
     async def _read_files_into_dataframes(
         self,
